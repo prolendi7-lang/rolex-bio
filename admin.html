@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Rolex Bio</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js">
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff0000;
+        }
+        .card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 15px;
+        }
+        .card h3 {
+            margin-bottom: 15px;
+            color: #ff4444;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #ff0000;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+        }
+        button {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+        }
+        button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 8px;
+        }
+        .link-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 10px;
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+        .link-item input {
+            margin-bottom: 0;
+            flex: 1;
+        }
+        .link-item button {
+            width: auto;
+            padding: 8px 12px;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .delete-btn {
+            background: #ff0000 !important;
+        }
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+        .success {
+            background: rgba(0, 200, 0, 0.2);
+            color: #0f0;
+        }
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            color: #f00;
+        }
+        #loginScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        #loginBox {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+            border: 1px solid #333;
+        }
+        #loginBox input {
+            text-align: center;
+            font-size: 18px;
+            letter-spacing: 5px;
+        }
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginScreen">
+        <div id="loginBox">
+            <h3 style="margin-bottom:15px;">🔐 Admin Girişi</h3>
+            <input type="password" id="passInput" placeholder="Şifre" maxlength="20">
+            <button onclick="login()" style="margin-top:10px;">Giriş Yap</button>
+            <p id="loginError" style="color:#f00;font-size:12px;margin-top:8px;display:none;">Hatalı şifre!</p>
+        </div>
+    </div>
+
+    <div id="mainPanel" class="hidden">
+        <div class="container">
+            <div class="header">⚙️ Admin Panel</div>
+            <div class="message" id="message"></div>
+
+            <div class="card">
+                <h3>👤 Profil</h3>
+                <input type="text" id="nameInput" placeholder="İsim">
+                <textarea id="bioInput" placeholder="Açıklama / Bio" rows="2"></textarea>
+                <input type="text" id="avatarInput" placeholder="Profil fotoğrafı linki (imgur.com)">
+                <button onclick="saveProfile()">💾 Profili Kaydet</button>
+            </div>
+
+            <div class="card">
+                <h3>🔗 Linkler</h3>
+                <div id="linksList"></div>
+                <button class="secondary" onclick="addLink()">+ Yeni Link Ekle</button>
+                <button onclick="saveLinks()" style="margin-top:10px;">💾 Linkleri Kaydet</button>
+            </div>
+
+            <div class="card">
+                <h3>📊 İstatistikler</h3>
+                <p style="font-size:20px;">👁 Toplam Görüntülenme: <strong id="totalViews">0</strong></p>
+                <button class="secondary" onclick="window.open('index.html','_blank')">🔍 Bio Sayfasını Gör</button>
+            </div>
+
+            <p style="text-align:center;color:#555;font-size:12px;">Admin Panel v1.0</p>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNnqSKYVW_JMc4CO5KoNQb4ctrMdIMS6s",
+            authDomain: "rolex-bio.firebaseapp.com",
+            projectId: "rolex-bio",
+            storageBucket: "rolex-bio.firebasestorage.app",
+            messagingSenderId: "182739949955",
+            appId: "1:182739949955:web:bd859e25ceee8936273eb6"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const CORRECT_PASS = "Er11er11";
+
+        let currentLinks = [];
+
+        function login() {
+            const pass = document.getElementById('passInput').value;
+            if (pass === CORRECT_PASS) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainPanel').classList.remove('hidden');
+                loadData();
+                sessionStorage.setItem('admin_logged', '1');
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        if (sessionStorage.getItem('admin_logged') === '1') {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainPanel').classList.remove('hidden');
+            loadData();
+        }
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 3000);
+        }
+
+        function loadData() {
+            db.collection("bio").doc("profile").get().then(doc => {
+                if (doc.exists) {
+                    const d = doc.data();
+                    document.getElementById('nameInput').value = d.name || '';
+                    document.getElementById('bioInput').value = d.bio || '';
+                    document.getElementById('avatarInput').value = d.avatar || '';
+                    currentLinks = d.links || [];
+                    renderLinks();
+                }
+            });
+            db.collection("bio").doc("views").get().then(doc => {
+                document.getElementById('totalViews').textContent = doc.exists ? (doc.data().count ||
+                    0) : 0;
+            });
+        }
+
+        function renderLinks() {
+            const container = document.getElementById('linksList');
+            container.innerHTML = '';
+            currentLinks.forEach((link, i) => {
+                const div = document.createElement('div');
+                div.className = 'link-item';
+                div.innerHTML = `
+              <input type="text" placeholder="İkon (emoji)" value="${link.icon || '🔗'}" style="width:50px;" onchange="currentLinks[${i}].icon=this.value">
+              <input type="text" placeholder="Başlık" value="${link.title}" onchange="currentLinks[${i}].title=this.value">
+              <input type="text" placeholder="URL" value="${link.url}" onchange="currentLinks[${i}].url=this.value">
+              <button class="delete-btn" onclick="deleteLink(${i})">✕</button>
+            `;
+                container.appendChild(div);
+            });
+        }
+
+        function addLink() {
+            currentLinks.push({ icon: '🔗', title: 'Yeni Link', url: 'https://' });
+            renderLinks();
+        }
+
+        function deleteLink(i) {
+            currentLinks.splice(i, 1);
+            renderLinks();
+        }
+
+        function saveLinks() {
+            document.querySelectorAll('#linksList input').forEach((inp, i) => {
+                const idx = Math.floor(i / 3);
+                const field = i % 3;
+                if (field === 0) currentLinks[idx].icon = inp.value;
+                if (field === 1) currentLinks[idx].title = inp.value;
+                if (field === 2) currentLinks[idx].url = inp.value;
+            });
+            db.collection("bio").doc("profile").update({ links: currentLinks })
+                .then(() => showMessage('Linkler kaydedildi!', 'success'))
+                .catch(() => showMessage('Hata!', 'error'));
+        }
+
+        function saveProfile() {
+            const data = {
+                name: document.getElementById('nameInput').value,
+                bio: document.getElementById('bioInput').value,
+                avatar: document.getElementById('avatarInput').value,
+            };
+            db.collection("bio").doc("profile").set(data, { merge: true })
+                .then(() => showMessage('Profil kaydedildi!', 'success'))
+                .catch(() => showMessage('Hata!', 'error'));
+        }
+    </script>
+</body>
+</html>
