@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel Pro v3 - Rolex Bio</title>
+    <title>Admin Panel</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <style>
@@ -17,6 +17,7 @@
         input, textarea, select { width: 100%; padding: 11px; margin-bottom: 9px; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; color: #fff; font-size: 13px; font-family: inherit; }
         input:focus, textarea:focus, select:focus { outline: none; border-color: #ff0000; }
         input[type="range"] { width: 100%; accent-color: #ff0000; padding: 0; margin: 4px 0; }
+        input[type="color"] { padding: 3px; height: 40px; cursor: pointer; }
         .range-label { display: flex; justify-content: space-between; font-size: 11px; color: #666; }
         button { width: 100%; padding: 12px; background: linear-gradient(135deg, #ff0000, #cc0000); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; letter-spacing: 1px; transition: all 0.3s; margin-top: 5px; }
         button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,0,0,0.3); }
@@ -25,6 +26,8 @@
         button.small { width: auto; padding: 7px 14px; font-size: 12px; }
         .effect-btn { display: inline-block; padding: 8px 14px; margin: 4px; border-radius: 20px; border: 1px solid #333; background: #1a1a1a; color: #ccc; cursor: pointer; font-size: 12px; transition: all 0.2s; }
         .effect-btn:hover, .effect-btn.active { background: #ff0000; border-color: #ff0000; color: #fff; }
+        .badge-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; margin: 4px; border-radius: 20px; border: 1px solid #333; background: #1a1a1a; color: #ccc; cursor: pointer; font-size: 12px; transition: all 0.2s; }
+        .badge-btn:hover, .badge-btn.active { border-color: #ff0000; background: #2a1414; }
         .link-item { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; padding: 10px; background: #141414; border-radius: 10px; flex-wrap: wrap; }
         .link-item input, .link-item select { margin-bottom: 0; flex: 1; min-width: 50px; }
         .link-item button { width: auto; padding: 7px 10px; font-size: 11px; }
@@ -44,6 +47,7 @@
         .tpl-btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #ccc; cursor: pointer; font-size: 11px; }
         .tpl-btn:hover { background: #ff0000; border-color: #ff0000; color: #fff; }
         .preview-link { display: block; text-align: center; color: #ff4444; font-size: 13px; margin-top: 10px; text-decoration: none; }
+        .hint { color: #666; font-size: 11px; margin: -4px 0 10px; }
     </style>
 </head>
 <body>
@@ -58,7 +62,7 @@
 
     <div id="mainPanel" class="hidden">
         <div class="container">
-            <div class="header">⚙️ Admin Panel Pro v3</div>
+            <div class="header">⚙️ Admin Panel</div>
             <div class="message" id="message"></div>
 
             <!-- PROFİL -->
@@ -78,7 +82,7 @@
                     <input type="checkbox" id="emoji3d" checked>
                 </div>
 
-                <h4>İsim Efekti Seç</h4>
+                <h4>İsim Efekti Seç (butona bas, otomatik uygulanır)</h4>
                 <div id="nameEffectBtns">
                     <span class="effect-btn active" data-effect="default">Standart</span>
                     <span class="effect-btn" data-effect="gold">Altın</span>
@@ -86,24 +90,40 @@
                     <span class="effect-btn" data-effect="neon-blue">Neon Mavi</span>
                     <span class="effect-btn" data-effect="purple">Mor Gradient</span>
                     <span class="effect-btn" data-effect="rainbow">Rainbow</span>
-                </div>
-                <input type="text" id="nameGradient" placeholder="Özel gradient">
-                <div class="inline-group">
-                    <input type="text" id="nameGlow" placeholder="Glow gölge">
-                    <input type="text" id="neonColor" placeholder="Neon rengi">
+                    <span class="effect-btn" data-effect="ice">Buz Mavisi</span>
+                    <span class="effect-btn" data-effect="fire">Ateş</span>
+                    <span class="effect-btn" data-effect="graffiti">Graffiti</span>
+                    <span class="effect-btn" data-effect="stencil">Stencil</span>
+                    <span class="effect-btn" data-effect="marker">Kalın Marker</span>
                 </div>
                 <input type="range" id="neonSize" min="2" max="40" value="10" oninput="document.getElementById('ns').textContent=this.value+'px'">
-                <div class="range-label"><span>Neon boyutu</span><span id="ns">10px</span></div>
+                <div class="range-label"><span>Neon boyutu (sadece neon efektlerde)</span><span id="ns">10px</span></div>
 
-                <h4>Rozet (Mavi Tik)</h4>
+                <h4>Rozet (Doğrulama Tiki)</h4>
                 <div class="toggle-row">
                     <span>Rozeti göster</span>
                     <input type="checkbox" id="showBadge" checked>
                 </div>
+                <div id="badgePresets">
+                    <span class="badge-btn" data-badge="instagram">📷 Instagram Mavi Tik</span>
+                    <span class="badge-btn" data-badge="twitter">🐦 X/Twitter</span>
+                    <span class="badge-btn" data-badge="youtube">▶️ YouTube</span>
+                    <span class="badge-btn" data-badge="tiktok">🎵 TikTok</span>
+                    <span class="badge-btn" data-badge="gold">⭐ Altın Yıldız</span>
+                    <span class="badge-btn" data-badge="fire">🔥 Ateş</span>
+                </div>
+                <p class="hint">Bir stil seç, istersen aşağıdan ikon/rengi elle de değiştirebilirsin.</p>
                 <div class="inline-group">
                     <input type="text" id="badgeIcon" placeholder="Rozet ikon (✓, ★, 🔥)" maxlength="2">
-                    <input type="text" id="badgeColor" placeholder="Rozet rengi">
+                    <input type="text" id="badgeColor" placeholder="Rozet rengi (css)">
                 </div>
+
+                <h4>Durum Satırı (📍 Telegram gibi, isteğe bağlı)</h4>
+                <div class="inline-group">
+                    <input type="text" id="statusIcon" placeholder="İkon (📍)" maxlength="4" style="flex:0 0 80px;">
+                    <input type="text" id="statusText" placeholder="Metin (örn: Telegram, İstanbul)">
+                </div>
+                <p class="hint">Boş bırakırsan bu satır sitede görünmez.</p>
 
                 <h4>Kart Saydamlık & Bulanıklık</h4>
                 <input type="range" id="cardOpacity" min="20" max="100" value="85" oninput="document.getElementById('cov').textContent=this.value+'%'">
@@ -117,7 +137,7 @@
             <!-- LİNKLER -->
             <div class="card">
                 <h3>🔗 Linkler & Şablonlar</h3>
-                <h4>Hazır Şablon Ekle</h4>
+                <h4>Hazır Şablon Ekle (marka renkli, sonra linki düzenle)</h4>
                 <div class="template-btns">
                     <span class="tpl-btn" data-tpl="telegram">📱 Telegram</span>
                     <span class="tpl-btn" data-tpl="discord">🎮 Discord</span>
@@ -130,6 +150,7 @@
                     <span class="tpl-btn" data-tpl="github">💻 GitHub</span>
                     <span class="tpl-btn" data-tpl="website">🌐 Website</span>
                 </div>
+                <p class="hint">Şablona bas → listeye eklenir → URL kutusuna istediğin linki yaz → kaydet. Sitede küçük yuvarlak ikon olarak görünür, üzerine gelince başlığı gösterir.</p>
                 <div id="linksList"></div>
                 <button class="secondary" onclick="addLink()">+ Boş Link Ekle</button>
 
@@ -142,6 +163,12 @@
                     <span>Işık kayması (Shimmer)</span>
                     <input type="checkbox" id="btnShimmer" checked>
                 </div>
+                <h4>Parlama Rengi & Şiddeti</h4>
+                <input type="color" id="btnGlowColorPicker" value="#ffffff" onchange="document.getElementById('btnGlowColor').value = hexToRgbStr(this.value)">
+                <input type="range" id="btnGlowIntensity" min="0" max="100" value="40" oninput="document.getElementById('giv').textContent=this.value+'%'">
+                <div class="range-label"><span>Parlama şiddeti (butonların yanlarından)</span><span id="giv">40%</span></div>
+                <input type="hidden" id="btnGlowColor" value="255,255,255">
+
                 <h4>Buton Renkleri</h4>
                 <div class="inline-group">
                     <input type="text" id="btnBgColor" placeholder="Arka plan rengi">
@@ -183,6 +210,7 @@
                     <span>Otomatik çal</span>
                     <input type="checkbox" id="musicAutoplay" checked>
                 </div>
+                <p class="hint">Manuel çal/durdur tuşu kaldırıldı, müzik sadece otomatik çalar.</p>
                 <h4>Müzik Kartı Saydamlık</h4>
                 <input type="range" id="musicOpacity" min="20" max="100" value="90" oninput="document.getElementById('mov').textContent=this.value+'%'">
                 <div class="range-label"><span>Saydamlık</span><span id="mov">90%</span></div>
@@ -197,7 +225,7 @@
                 <p style="font-size:18px;">👁 <strong id="totalViews">0</strong> görüntülenme</p>
                 <a href="index.html" target="_blank" class="preview-link">🔍 Bio Sayfasını Gör →</a>
             </div>
-            <p style="text-align:center;color:#333;font-size:11px;padding-bottom:30px;">Admin Panel Pro v3</p>
+            <p style="text-align:center;color:#333;font-size:11px;padding-bottom:30px;">Admin Panel</p>
         </div>
     </div>
 
@@ -215,27 +243,54 @@
         const PASS = "Er11er11";
         let currentLinks = [];
 
+        function hexToRgbStr(hex) {
+            hex = hex.replace('#', '');
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            return `${r},${g},${b}`;
+        }
+        function rgbStrToHex(rgbStr) {
+            const parts = (rgbStr || '255,255,255').split(',').map(n => parseInt(n.trim(), 10));
+            return '#' + parts.map(n => (isNaN(n) ? 255 : n).toString(16).padStart(2, '0')).join('');
+        }
+
         const EFFECTS = {
-            'default': { gradient: 'linear-gradient(135deg, #ffffff, #cccccc)', glow: 'none', neon: false },
-            'gold': { gradient: 'linear-gradient(135deg, #ffd700, #ffaa00, #ffd700)', glow: '0 0 15px rgba(255,200,0,0.6)', neon: false },
-            'neon-red': { gradient: 'linear-gradient(135deg, #fff, #fff)', glow: 'none', neon: true, neonColor: '#ff0000', neonSize: 10 },
-            'neon-blue': { gradient: 'linear-gradient(135deg, #fff, #fff)', glow: 'none', neon: true, neonColor: '#00aaff', neonSize: 10 },
-            'purple': { gradient: 'linear-gradient(135deg, #c084fc, #7c3aed)', glow: '0 0 20px rgba(168,85,247,0.5)', neon: false },
-            'rainbow': { gradient: 'linear-gradient(135deg, #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #8800ff)', glow: '0 0 15px rgba(255,255,255,0.4)', neon: false }
+            'default': { gradient: 'linear-gradient(135deg, #ffffff, #cccccc)', glow: 'none', neon: false, neonColor: '#fff', font: '' },
+            'gold': { gradient: 'linear-gradient(135deg, #ffd700, #ffaa00, #ffd700)', glow: '0 0 15px rgba(255,200,0,0.6)', neon: false, neonColor: '#ffd700', font: '' },
+            'neon-red': { gradient: 'linear-gradient(135deg, #fff, #fff)', glow: 'none', neon: true, neonColor: '#ff0000', font: '' },
+            'neon-blue': { gradient: 'linear-gradient(135deg, #fff, #fff)', glow: 'none', neon: true, neonColor: '#00aaff', font: '' },
+            'purple': { gradient: 'linear-gradient(135deg, #c084fc, #7c3aed)', glow: '0 0 20px rgba(168,85,247,0.5)', neon: false, neonColor: '#c084fc', font: '' },
+            'rainbow': { gradient: 'linear-gradient(135deg, #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #8800ff)', glow: '0 0 15px rgba(255,255,255,0.4)', neon: false, neonColor: '#fff', font: '' },
+            'ice': { gradient: 'linear-gradient(135deg, #a1eafb, #4facfe, #a1eafb)', glow: '0 0 15px rgba(79,172,254,0.5)', neon: true, neonColor: '#4facfe', font: '' },
+            'fire': { gradient: 'linear-gradient(135deg, #ff512f, #f09819, #ff512f)', glow: '0 0 15px rgba(255,81,47,0.6)', neon: true, neonColor: '#ff512f', font: '' },
+            'graffiti': { gradient: 'linear-gradient(135deg, #ffffff, #ffffff)', glow: '2px 2px 0 rgba(0,0,0,0.6), -1px -1px 0 rgba(0,0,0,0.4)', neon: false, neonColor: '#fff', font: "'Permanent Marker', cursive" },
+            'stencil': { gradient: 'linear-gradient(135deg, #ffffff, #ffffff)', glow: '2px 2px 0 rgba(0,0,0,0.5)', neon: false, neonColor: '#fff', font: "'Bungee', cursive" },
+            'marker': { gradient: 'linear-gradient(135deg, #ffffff, #dddddd)', glow: '1px 1px 0 rgba(0,0,0,0.4)', neon: false, neonColor: '#fff', font: "'Righteous', cursive" }
         };
         let selectedEffect = 'default';
 
+        const BADGES = {
+            'instagram': { icon: '✓', color: 'linear-gradient(135deg, #3897f0, #1877f2)' },
+            'twitter': { icon: '✓', color: 'linear-gradient(135deg, #1d9bf0, #0d8bd9)' },
+            'youtube': { icon: '✓', color: 'linear-gradient(135deg, #ff0000, #cc0000)' },
+            'tiktok': { icon: '✓', color: 'linear-gradient(135deg, #010101, #25f4ee)' },
+            'gold': { icon: '★', color: 'linear-gradient(135deg, #ffd700, #ffaa00)' },
+            'fire': { icon: '🔥', color: 'linear-gradient(135deg, #ff4500, #ff8c00)' }
+        };
+        let selectedBadge = '';
+
         const TEMPLATES = {
-            'telegram': { icon: '📱', title: 'Telegram', url: 'https://t.me/kullaniciadi' },
-            'discord': { icon: '🎮', title: 'Discord', url: 'https://discord.gg/sunucu' },
-            'youtube': { icon: '▶️', title: 'YouTube', url: 'https://youtube.com/@kanal' },
-            'instagram': { icon: '📷', title: 'Instagram', url: 'https://instagram.com/kullaniciadi' },
-            'tiktok': { icon: '🎵', title: 'TikTok', url: 'https://tiktok.com/@kullaniciadi' },
-            'twitch': { icon: '📺', title: 'Twitch', url: 'https://twitch.tv/kullaniciadi' },
-            'steam': { icon: '🎯', title: 'Steam', url: 'https://steamcommunity.com/id/kullaniciadi' },
-            'spotify': { icon: '🎧', title: 'Spotify', url: 'https://open.spotify.com/user/kullaniciadi' },
-            'github': { icon: '💻', title: 'GitHub', url: 'https://github.com/kullaniciadi' },
-            'website': { icon: '🌐', title: 'Website', url: 'https://' }
+            'telegram': { icon: '📱', title: 'Telegram', url: 'https://t.me/kullaniciadi', color: '0,136,204' },
+            'discord': { icon: '🎮', title: 'Discord', url: 'https://discord.gg/sunucu', color: '88,101,242' },
+            'youtube': { icon: '▶️', title: 'YouTube', url: 'https://youtube.com/@kanal', color: '255,0,0' },
+            'instagram': { icon: '📷', title: 'Instagram', url: 'https://instagram.com/kullaniciadi', color: '225,48,108' },
+            'tiktok': { icon: '🎵', title: 'TikTok', url: 'https://tiktok.com/@kullaniciadi', color: '37,244,238' },
+            'twitch': { icon: '📺', title: 'Twitch', url: 'https://twitch.tv/kullaniciadi', color: '145,70,255' },
+            'steam': { icon: '🎯', title: 'Steam', url: 'https://steamcommunity.com/id/kullaniciadi', color: '102,192,244' },
+            'spotify': { icon: '🎧', title: 'Spotify', url: 'https://open.spotify.com/user/kullaniciadi', color: '30,215,96' },
+            'github': { icon: '💻', title: 'GitHub', url: 'https://github.com/kullaniciadi', color: '255,255,255' },
+            'website': { icon: '🌐', title: 'Website', url: 'https://', color: '255,255,255' }
         };
 
         function login() {
@@ -262,50 +317,69 @@
 
         function loadData() {
             db.collection("bio").doc("profile").get().then(doc => {
-                if (!doc.exists) return;
-                const d = doc.data();
+                const d = doc.exists ? doc.data() : {};
                 document.getElementById('nameInput').value = d.name || '';
                 document.getElementById('bioInput').value = d.bio || '';
                 document.getElementById('avatarInput').value = d.avatar || '';
                 document.getElementById('emojiLeft').value = d.emojiLeft || '';
                 document.getElementById('emojiRight').value = d.emojiRight || '';
                 document.getElementById('emoji3d').checked = d.emoji3d !== false;
-                document.getElementById('nameGradient').value = d.nameGradient || '';
-                document.getElementById('nameGlow').value = d.nameGlow || '';
-                document.getElementById('neonColor').value = d.neonColor || '';
+
+                selectedEffect = d.nameEffect || 'default';
+                document.querySelectorAll('.effect-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.effect === selectedEffect);
+                });
                 document.getElementById('neonSize').value = d.neonSize || 10;
                 document.getElementById('ns').textContent = (d.neonSize || 10) + 'px';
+
+                document.getElementById('statusIcon').value = d.statusIcon || '📍';
+                document.getElementById('statusText').value = d.statusText || '';
+
                 document.getElementById('showBadge').checked = d.showBadge !== false;
+                selectedBadge = d.badgeStyle || '';
+                document.querySelectorAll('.badge-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.badge === selectedBadge);
+                });
                 document.getElementById('badgeIcon').value = d.badgeIcon || '✓';
                 document.getElementById('badgeColor').value = d.badgeColor || '';
-                document.getElementById('cardOpacity').value = (d.cardOpacity || 0.85) * 100;
-                document.getElementById('cov').textContent = Math.round((d.cardOpacity || 0.85) * 100) + '%';
-                document.getElementById('cardBlur').value = d.cardBlur || 20;
-                document.getElementById('cbv').textContent = (d.cardBlur || 20) + 'px';
+
+                document.getElementById('cardOpacity').value = Math.round((d.cardOpacity !== undefined ? d.cardOpacity : 0.85) * 100);
+                document.getElementById('cov').textContent = document.getElementById('cardOpacity').value + '%';
+                document.getElementById('cardBlur').value = d.cardBlur !== undefined ? d.cardBlur : 20;
+                document.getElementById('cbv').textContent = document.getElementById('cardBlur').value + 'px';
+
                 document.getElementById('bgColor').value = d.bgColor || '';
                 document.getElementById('bgImage').value = d.bgImage || '';
                 document.getElementById('particlesToggle').checked = d.particles !== false;
                 document.getElementById('particleColor').value = d.particleColor || '';
                 document.getElementById('particleCount').value = d.particleCount || 40;
                 document.getElementById('pv').textContent = d.particleCount || 40;
+
                 document.getElementById('btnGlow').checked = d.btnGlow !== false;
                 document.getElementById('btnShimmer').checked = d.btnShimmer !== false;
                 document.getElementById('btnBgColor').value = d.btnBgColor || '';
                 document.getElementById('btnBorderColor').value = d.btnBorderColor || '';
                 document.getElementById('btnHoverColor').value = d.btnHoverColor || '';
                 document.getElementById('btnHoverBorder').value = d.btnHoverBorder || '';
+                document.getElementById('btnGlowColor').value = d.btnGlowColor || '255,255,255';
+                document.getElementById('btnGlowColorPicker').value = rgbStrToHex(d.btnGlowColor || '255,255,255');
+                document.getElementById('btnGlowIntensity').value = d.btnGlowIntensity !== undefined ? d.btnGlowIntensity : 40;
+                document.getElementById('giv').textContent = (d.btnGlowIntensity !== undefined ? d.btnGlowIntensity : 40) + '%';
+
                 document.getElementById('musicUrl').value = d.musicUrl || '';
                 document.getElementById('musicTitleInput').value = d.musicTitle || '';
                 document.getElementById('musicArtist').value = d.musicArtist || '';
                 document.getElementById('musicCover').value = d.musicCover || '';
                 document.getElementById('musicAutoplay').checked = d.musicAutoplay !== false;
-                document.getElementById('musicOpacity').value = (d.musicOpacity || 0.9) * 100;
-                document.getElementById('mov').textContent = Math.round((d.musicOpacity || 0.9) * 100) + '%';
-                document.getElementById('musicBlur').value = d.musicBlur || 10;
-                document.getElementById('mbv').textContent = (d.musicBlur || 10) + 'px';
+                document.getElementById('musicOpacity').value = Math.round((d.musicOpacity !== undefined ? d.musicOpacity : 0.9) * 100);
+                document.getElementById('mov').textContent = document.getElementById('musicOpacity').value + '%';
+                document.getElementById('musicBlur').value = d.musicBlur !== undefined ? d.musicBlur : 10;
+                document.getElementById('mbv').textContent = document.getElementById('musicBlur').value + 'px';
+
                 currentLinks = d.links || [];
                 renderLinks();
-            });
+            }).catch(err => { console.error(err); msg('Veri yüklenemedi: ' + err.message, 'error'); });
+
             db.collection("bio").doc("views").get().then(doc => {
                 document.getElementById('totalViews').textContent = doc.exists ? (doc.data().count || 0) : 0;
             });
@@ -319,8 +393,8 @@
                 d.className = 'link-item';
                 d.innerHTML = `
                     <input type="text" placeholder="İkon" value="${l.icon||'🔗'}" style="width:45px;" onchange="currentLinks[${i}].icon=this.value">
-                    <input type="text" placeholder="Başlık" value="${l.title}" onchange="currentLinks[${i}].title=this.value">
-                    <input type="text" placeholder="URL" value="${l.url}" onchange="currentLinks[${i}].url=this.value">
+                    <input type="text" placeholder="Başlık" value="${l.title||''}" onchange="currentLinks[${i}].title=this.value">
+                    <input type="text" placeholder="URL" value="${l.url||''}" onchange="currentLinks[${i}].url=this.value">
                     <button class="danger" onclick="deleteLink(${i})">✕</button>
                 `;
                 c.appendChild(d);
@@ -336,21 +410,24 @@
         function saveLinks() {
             document.querySelectorAll('#linksList .link-item').forEach((item, i) => {
                 const ins = item.querySelectorAll('input');
-                currentLinks[i] = { icon: ins[0].value, title: ins[1].value, url: ins[2].value };
+                currentLinks[i] = { ...currentLinks[i], icon: ins[0].value, title: ins[1].value, url: ins[2].value };
             });
-            db.collection("bio").doc("profile").update({
+            db.collection("bio").doc("profile").set({
                 links: currentLinks,
                 btnGlow: document.getElementById('btnGlow').checked,
                 btnShimmer: document.getElementById('btnShimmer').checked,
                 btnBgColor: document.getElementById('btnBgColor').value,
                 btnBorderColor: document.getElementById('btnBorderColor').value,
                 btnHoverColor: document.getElementById('btnHoverColor').value,
-                btnHoverBorder: document.getElementById('btnHoverBorder').value
-            }).then(() => msg('Kaydedildi!', 'success')).catch(() => msg('Hata!', 'error'));
+                btnHoverBorder: document.getElementById('btnHoverBorder').value,
+                btnGlowColor: document.getElementById('btnGlowColor').value,
+                btnGlowIntensity: parseInt(document.getElementById('btnGlowIntensity').value)
+            }, { merge: true }).then(() => msg('Kaydedildi!', 'success')).catch(err => { console.error(err); msg('Hata: ' + err.message, 'error'); });
         }
 
         function saveProfile() {
             const ef = EFFECTS[selectedEffect];
+            const badge = BADGES[selectedBadge];
             const data = {
                 name: document.getElementById('nameInput').value,
                 bio: document.getElementById('bioInput').value,
@@ -358,33 +435,38 @@
                 emojiLeft: document.getElementById('emojiLeft').value,
                 emojiRight: document.getElementById('emojiRight').value,
                 emoji3d: document.getElementById('emoji3d').checked,
-                nameGradient: document.getElementById('nameGradient').value || ef.gradient,
-                nameGlow: document.getElementById('nameGlow').value || ef.glow,
+                nameEffect: selectedEffect,
+                nameGradient: ef.gradient,
+                nameGlow: ef.glow,
                 nameNeon: ef.neon,
-                neonColor: document.getElementById('neonColor').value || ef.neonColor,
+                neonColor: ef.neonColor,
                 neonSize: parseInt(document.getElementById('neonSize').value),
+                nameFont: ef.font || '',
+                statusIcon: document.getElementById('statusIcon').value || '📍',
+                statusText: document.getElementById('statusText').value,
                 showBadge: document.getElementById('showBadge').checked,
-                badgeIcon: document.getElementById('badgeIcon').value,
-                badgeColor: document.getElementById('badgeColor').value,
+                badgeStyle: selectedBadge,
+                badgeIcon: document.getElementById('badgeIcon').value || (badge ? badge.icon : '✓'),
+                badgeColor: document.getElementById('badgeColor').value || (badge ? badge.color : ''),
                 cardOpacity: parseInt(document.getElementById('cardOpacity').value) / 100,
                 cardBlur: parseInt(document.getElementById('cardBlur').value)
             };
             db.collection("bio").doc("profile").set(data, { merge: true })
-                .then(() => msg('Profil kaydedildi!', 'success')).catch(() => msg('Hata!', 'error'));
+                .then(() => msg('Profil kaydedildi!', 'success')).catch(err => { console.error(err); msg('Hata: ' + err.message, 'error'); });
         }
 
         function saveBackground() {
-            db.collection("bio").doc("profile").update({
+            db.collection("bio").doc("profile").set({
                 bgColor: document.getElementById('bgColor').value,
                 bgImage: document.getElementById('bgImage').value,
                 particles: document.getElementById('particlesToggle').checked,
                 particleColor: document.getElementById('particleColor').value,
                 particleCount: parseInt(document.getElementById('particleCount').value)
-            }).then(() => msg('Arka plan kaydedildi!', 'success')).catch(() => msg('Hata!', 'error'));
+            }, { merge: true }).then(() => msg('Arka plan kaydedildi!', 'success')).catch(err => { console.error(err); msg('Hata: ' + err.message, 'error'); });
         }
 
         function saveMusic() {
-            db.collection("bio").doc("profile").update({
+            db.collection("bio").doc("profile").set({
                 musicUrl: document.getElementById('musicUrl').value,
                 musicTitle: document.getElementById('musicTitleInput').value,
                 musicArtist: document.getElementById('musicArtist').value,
@@ -392,15 +474,29 @@
                 musicAutoplay: document.getElementById('musicAutoplay').checked,
                 musicOpacity: parseInt(document.getElementById('musicOpacity').value) / 100,
                 musicBlur: parseInt(document.getElementById('musicBlur').value)
-            }).then(() => msg('Müzik kaydedildi!', 'success')).catch(() => msg('Hata!', 'error'));
+            }, { merge: true }).then(() => msg('Müzik kaydedildi!', 'success')).catch(err => { console.error(err); msg('Hata: ' + err.message, 'error'); });
         }
 
-        // Efekt butonları
+        // Efekt / rozet / şablon butonları
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('effect-btn')) {
                 document.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
                 selectedEffect = e.target.dataset.effect;
+            }
+            if (e.target.classList.contains('badge-btn')) {
+                const key = e.target.dataset.badge;
+                const isActive = e.target.classList.contains('active');
+                document.querySelectorAll('.badge-btn').forEach(b => b.classList.remove('active'));
+                if (!isActive) {
+                    e.target.classList.add('active');
+                    selectedBadge = key;
+                    const b = BADGES[key];
+                    document.getElementById('badgeIcon').value = b.icon;
+                    document.getElementById('badgeColor').value = b.color;
+                } else {
+                    selectedBadge = '';
+                }
             }
             if (e.target.classList.contains('tpl-btn')) {
                 const tpl = TEMPLATES[e.target.dataset.tpl];
@@ -422,6 +518,8 @@
                 .textContent = this.value + '%'; });
         document.getElementById('musicBlur').addEventListener('input', function() { document.getElementById('mbv')
                 .textContent = this.value + 'px'; });
+        document.getElementById('btnGlowIntensity').addEventListener('input', function() { document.getElementById('giv')
+                .textContent = this.value + '%'; });
     </script>
 </body>
 </html>
