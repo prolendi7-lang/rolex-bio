@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rolex | Bio</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js">
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 50%, #0d0d0d 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 50, 50, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(200, 0, 0, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 50, 50, 0.6);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .profile-card {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 30px 35px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+                0 0 40px rgba(255, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 50, 50, 0.6);
+            object-fit: cover;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border: 2px solid #0a0a0a;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+            }
+        }
+
+        .name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #ffffff, #cccccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .bio-text {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-btn::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 0, 0, 0.15), transparent);
+            transition: width 0.4s ease;
+        }
+
+        .link-btn:hover {
+            border-color: rgba(255, 50, 50, 0.5);
+            transform: translateX(5px);
+            box-shadow: 0 5px 25px rgba(255, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .link-btn:hover::before {
+            width: 100%;
+        }
+
+        .link-icon {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .link-title {
+            flex: 1;
+            text-align: left;
+        }
+
+        .link-arrow {
+            opacity: 0.3;
+            transition: all 0.3s;
+            font-size: 18px;
+        }
+
+        .link-btn:hover .link-arrow {
+            opacity: 1;
+            transform: translateX(3px);
+            color: #ff0000;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+            letter-spacing: 1px;
+        }
+
+        .view-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #ff4444;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 480px) {
+            .profile-card {
+                padding: 30px 20px 25px;
+            }
+            .name {
+                font-size: 24px;
+            }
+            .avatar {
+                width: 85px;
+                height: 85px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <div class="profile-card">
+            <div class="avatar-container">
+                <img class="avatar" id="avatar" src="https://i.imgur.com/default.png" alt="Avatar">
+                <div class="badge">✓</div>
+            </div>
+            <h1 class="name" id="nameDisplay">Yükleniyor...</h1>
+            <p class="bio-text" id="bioDisplay">Yükleniyor...</p>
+            <div class="links" id="linksContainer">
+                <div class="link-btn" style="justify-content:center; opacity:0.5;">Yükleniyor...</div>
+            </div>
+            <div class="view-count">👁 <span id="viewCount">0</span> görüntülenme</div>
+        </div>
+        <div class="footer">🔗 Powered by Rolex</div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNnqSKYVW_JMc4CO5KoNQb4ctrMdIMS6s",
+            authDomain: "rolex-bio.firebaseapp.com",
+            projectId: "rolex-bio",
+            storageBucket: "rolex-bio.firebasestorage.app",
+            messagingSenderId: "182739949955",
+            appId: "1:182739949955:web:bd859e25ceee8936273eb6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Partikül efekti
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Verileri çek
+        db.collection("bio").doc("profile").onSnapshot((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                document.getElementById('nameDisplay').textContent = data.name || 'İsimsiz';
+                document.getElementById('bioDisplay').textContent = data.bio || '';
+                document.getElementById('avatar').src = data.avatar ||
+                    'https://i.imgur.com/default.png';
+                document.title = (data.name || 'Bio') + ' | Bio';
+
+                const linksContainer = document.getElementById('linksContainer');
+                linksContainer.innerHTML = '';
+                if (data.links && data.links.length > 0) {
+                    data.links.forEach(link => {
+                        const a = document.createElement('a');
+                        a.href = link.url;
+                        a.target = '_blank';
+                        a.className = 'link-btn';
+                        a.innerHTML = `
+                    <span class="link-icon">${link.icon || '🔗'}</span>
+                    <span class="link-title">${link.title}</span>
+                    <span class="link-arrow">→</span>
+                  `;
+                        linksContainer.appendChild(a);
+                    });
+                } else {
+                    linksContainer.innerHTML =
+                        '<div class="link-btn" style="justify-content:center; opacity:0.5;">Henüz link eklenmedi</div>';
+                }
+            }
+        });
+
+        // Görüntülenme sayacı
+        const viewRef = db.collection("bio").doc("views");
+        viewRef.get().then((doc) => {
+            let count = doc.exists ? (doc.data().count || 0) : 0;
+            count++;
+            viewRef.set({ count: count });
+            document.getElementById('viewCount').textContent = count;
+            viewRef.onSnapshot((d) => {
+                if (d.exists) document.getElementById('viewCount').textContent = d.data().count || 0;
+            });
+        });
+    </script>
+</body>
+</html>
