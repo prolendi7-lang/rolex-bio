@@ -6,8 +6,15 @@
     <title>Bio</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Permanent+Marker&family=Righteous&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --glow-color: rgba(255,255,255,0.1);
+            --glow-color-soft: rgba(255,255,255,0.03);
+            --glow-shimmer: rgba(255,255,255,0.15);
+        }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             min-height: 100vh; color: white;
@@ -31,7 +38,7 @@
             border-radius: 24px; padding: 40px 30px 35px;
             border: 1px solid rgba(255,255,255,0.1);
             animation: fadeInUp 0.8s ease;
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(20,20,20,0.85);
         }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -57,44 +64,53 @@
             50% { box-shadow: 0 0 30px rgba(0,150,255,0.8); }
         }
         .name-container { margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        .name-emoji { font-size: 24px; display: inline-block; }
-        .name-emoji.d3 { text-shadow: 2px 2px 0 rgba(0,0,0,0.3); transform: perspective(100px) rotateY(-5deg); }
+        .name-emoji { font-size: 24px; display: inline-block; transition: transform 0.3s; }
+        .name-emoji.d3 {
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.2), 2px 2px 0 rgba(0,0,0,0.25), 3px 3px 4px rgba(0,0,0,0.35);
+            transform: perspective(200px) rotateY(-18deg) rotateX(6deg);
+            display: inline-block;
+        }
+        .name-emoji.d3:hover { transform: perspective(200px) rotateY(0deg) rotateX(0deg) scale(1.1); }
         .name {
             font-size: 28px; font-weight: 700; letter-spacing: 1px;
             background: linear-gradient(135deg, #ffffff, #cccccc);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        .bio-text { color: #aaa; font-size: 14px; margin-bottom: 25px; line-height: 1.5; }
-        .links { display: flex; flex-direction: column; gap: 12px; }
+        .bio-text { color: #aaa; font-size: 14px; margin-bottom: 10px; line-height: 1.5; }
+        .status-line {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            font-size: 13px; color: #bbb; opacity: 0.9; margin-bottom: 22px;
+        }
+        .status-line.hidden { display: none; }
+        .links { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 16px; }
         .link-btn {
-            display: flex; align-items: center; gap: 12px;
-            padding: 14px 20px;
-            border-radius: 14px; color: white; text-decoration: none;
-            font-size: 15px; font-weight: 500; transition: all 0.3s;
-            position: relative; overflow: hidden;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.12);
+            display: flex; align-items: center; justify-content: center;
+            width: 54px; height: 54px; border-radius: 50%;
+            color: white; text-decoration: none;
+            font-size: 22px; transition: all 0.3s;
+            position: relative;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
         }
-        .link-btn:hover { transform: translateY(-2px); }
-        .link-btn.glow-active::after {
-            content: ''; position: absolute; top: -2px; left: -100%; width: 60%; height: calc(100% + 4px);
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-            animation: shimmer 2s infinite;
-        }
-        @keyframes shimmer { 0% { left: -100%; } 100% { left: 200%; } }
+        .link-btn:hover { transform: translateY(-3px) scale(1.08); }
         .link-btn.glow-border {
-            box-shadow: 0 0 15px rgba(255,255,255,0.1), 0 0 30px rgba(255,255,255,0.03);
+            box-shadow: 0 0 12px var(--glow-color), 0 0 24px var(--glow-color-soft);
         }
-        .link-icon { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
-        .link-title { flex: 1; text-align: left; }
-        .link-arrow { opacity: 0.3; transition: all 0.3s; font-size: 18px; }
-        .link-btn:hover .link-arrow { opacity: 1; transform: translateX(3px); }
+        .link-btn.glow-active {
+            animation: iconPulse 2.6s ease-in-out infinite;
+        }
+        @keyframes iconPulse {
+            0%, 100% { box-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color-soft); }
+            50% { box-shadow: 0 0 20px var(--glow-shimmer), 0 0 34px var(--glow-color); }
+        }
+        .link-icon { line-height: 1; }
+        .no-links-text { opacity: 0.5; font-size: 13px; }
         .music-player {
             margin-top: 20px; border-radius: 16px; padding: 15px 20px;
             display: flex; align-items: center; gap: 15px;
             border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
             animation: fadeInUp 1s ease;
+            background: rgba(20,20,20,0.9);
         }
         .music-player.hidden { display: none; }
         .music-cover {
@@ -107,15 +123,6 @@
         .music-info { flex: 1; text-align: left; }
         .music-title { font-size: 13px; font-weight: 600; }
         .music-artist { font-size: 11px; color: #888; }
-        .music-btn {
-            width: 40px; height: 40px; border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.05); color: white;
-            font-size: 18px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s;
-        }
-        .music-btn:hover { background: rgba(255,255,255,0.2); }
         .view-count {
             display: inline-flex; align-items: center; gap: 5px;
             background: rgba(255,255,255,0.05); padding: 6px 14px;
@@ -143,6 +150,9 @@
                 <span class="name-emoji" id="nameEmojiRight"></span>
             </div>
             <p class="bio-text" id="bioDisplay">Yükleniyor...</p>
+            <div class="status-line hidden" id="statusLine">
+                <span id="statusIcon">📍</span><span id="statusText"></span>
+            </div>
             <div class="links" id="linksContainer"></div>
             <div class="view-count">👁 <span id="viewCount">0</span></div>
         </div>
@@ -152,7 +162,6 @@
                 <div class="music-title" id="musicTitle">Müzik</div>
                 <div class="music-artist" id="musicArtist">Sanatçı</div>
             </div>
-            <button class="music-btn" id="playBtn" onclick="togglePlay()">▶</button>
         </div>
     </div>
     <audio id="bgMusic" loop style="display:none;"></audio>
@@ -195,13 +204,13 @@
                 badge.textContent = d.badgeIcon || '✓';
                 badge.style.background = d.badgeColor || 'linear-gradient(135deg, #1da1f2, #0d8bd9)'; }
 
-            // Saydamlık
-            document.getElementById('profileCard').style.background =
-                `rgba(20,20,20,${d.cardOpacity != null ? d.cardOpacity : 0.85})`;
-            document.getElementById('profileCard').style.backdropFilter =
-                `blur(${d.cardBlur != null ? d.cardBlur : 20}px)`;
-            document.getElementById('profileCard').style.webkitBackdropFilter =
-                `blur(${d.cardBlur != null ? d.cardBlur : 20}px)`;
+            // Saydamlık (kart)
+            const cardOpacity = (d.cardOpacity !== undefined && d.cardOpacity !== null) ? d.cardOpacity : 0.85;
+            const cardBlur = (d.cardBlur !== undefined && d.cardBlur !== null) ? d.cardBlur : 20;
+            const card = document.getElementById('profileCard');
+            card.style.background = `rgba(20,20,20,${cardOpacity})`;
+            card.style.backdropFilter = `blur(${cardBlur}px)`;
+            card.style.webkitBackdropFilter = `blur(${cardBlur}px)`;
 
             // İsim efekti
             const nameEl = document.getElementById('nameDisplay');
@@ -211,10 +220,28 @@
             nameEl.style.backgroundClip = 'text';
             nameEl.style.textShadow = d.nameGlow || 'none';
             nameEl.style.filter = d.nameNeon ? `drop-shadow(0 0 ${d.neonSize || 10}px ${d.neonColor || '#fff'})` : 'none';
+            nameEl.style.fontFamily = d.nameFont || "'Segoe UI', system-ui, -apple-system, sans-serif";
+
+            // Durum satırı (📍 Telegram gibi)
+            const statusLine = document.getElementById('statusLine');
+            if (d.statusText) {
+                statusLine.classList.remove('hidden');
+                document.getElementById('statusIcon').textContent = d.statusIcon || '📍';
+                document.getElementById('statusText').textContent = d.statusText;
+            } else {
+                statusLine.classList.add('hidden');
+            }
 
             // Arka plan
             document.body.style.background = d.bgImage ? `url(${d.bgImage}) center/cover no-repeat fixed` : (d.bgColor || '#0a0a0a');
             document.body.style.backgroundColor = d.bgColor || '#0a0a0a';
+
+            // Buton parlama rengi/şiddeti
+            const gi = (d.btnGlowIntensity !== undefined && d.btnGlowIntensity !== null ? d.btnGlowIntensity : 40) / 100;
+            const gc = d.btnGlowColor || '255,255,255';
+            document.documentElement.style.setProperty('--glow-color', `rgba(${gc},${(0.4 * gi).toFixed(2)})`);
+            document.documentElement.style.setProperty('--glow-color-soft', `rgba(${gc},${(0.12 * gi).toFixed(2)})`);
+            document.documentElement.style.setProperty('--glow-shimmer', `rgba(${gc},${(0.3 * gi).toFixed(2)})`);
 
             // Partikül
             const pc = document.getElementById('particles');
@@ -243,43 +270,53 @@
                     const a = document.createElement('a');
                     a.href = link.url;
                     a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.title = link.title || '';
                     a.className = 'link-btn';
                     if (btnGlow) a.classList.add('glow-border');
                     if (btnShimmer) a.classList.add('glow-active');
                     if (d.btnBgColor) a.style.background = d.btnBgColor;
                     if (d.btnBorderColor) a.style.borderColor = d.btnBorderColor;
+                    // Şablona özel marka rengi (kendi parlama rengi)
+                    if (link.color) {
+                        a.style.setProperty('--glow-color', `rgba(${link.color},0.5)`);
+                        a.style.setProperty('--glow-color-soft', `rgba(${link.color},0.15)`);
+                        a.style.setProperty('--glow-shimmer', `rgba(${link.color},0.45)`);
+                        if (!d.btnBorderColor) a.style.borderColor = `rgba(${link.color},0.5)`;
+                    }
                     if (d.btnHoverColor) {
                         a.onmouseenter = () => { a.style.background = d.btnHoverColor;
                             a.style.borderColor = d.btnHoverBorder || d.btnHoverColor; };
-                        a.onmouseleave = () => { a.style.background = d.btnBgColor || 'rgba(255,255,255,0.05)';
-                            a.style.borderColor = d.btnBorderColor || 'rgba(255,255,255,0.12)'; };
+                        a.onmouseleave = () => { a.style.background = d.btnBgColor || 'rgba(255,255,255,0.06)';
+                            a.style.borderColor = d.btnBorderColor || (link.color ? `rgba(${link.color},0.5)` : 'rgba(255,255,255,0.15)'); };
                     }
-                    a.innerHTML = `<span class="link-icon">${link.icon || '🔗'}</span><span class="link-title">${link.title}</span><span class="link-arrow">→</span>`;
+                    a.innerHTML = `<span class="link-icon">${link.icon || '🔗'}</span>`;
                     lc.appendChild(a);
                 });
             } else {
-                lc.innerHTML = '<div class="link-btn" style="justify-content:center;opacity:0.5;">Henüz link eklenmedi</div>';
+                lc.innerHTML = '<p class="no-links-text">Henüz link eklenmedi</p>';
             }
 
             // Müzik
             const mp = document.getElementById('musicPlayer');
             const audio = document.getElementById('bgMusic');
+            const cover = document.getElementById('musicCover');
             if (d.musicUrl) {
                 mp.classList.remove('hidden');
-                mp.style.background = `rgba(20,20,20,${d.musicOpacity != null ? d.musicOpacity : 0.9})`;
-                mp.style.backdropFilter = `blur(${d.musicBlur != null ? d.musicBlur : 10}px)`;
-                mp.style.webkitBackdropFilter = `blur(${d.musicBlur != null ? d.musicBlur : 10}px)`;
+                const musicOpacity = (d.musicOpacity !== undefined && d.musicOpacity !== null) ? d.musicOpacity : 0.9;
+                const musicBlur = (d.musicBlur !== undefined && d.musicBlur !== null) ? d.musicBlur : 10;
+                mp.style.background = `rgba(20,20,20,${musicOpacity})`;
+                mp.style.backdropFilter = `blur(${musicBlur}px)`;
+                mp.style.webkitBackdropFilter = `blur(${musicBlur}px)`;
                 document.getElementById('musicTitle').textContent = d.musicTitle || 'Müzik';
                 document.getElementById('musicArtist').textContent = d.musicArtist || '';
-                document.getElementById('musicCover').src = d.musicCover || 'https://i.imgur.com/default.png';
-                audio.src = d.musicUrl;
+                cover.src = d.musicCover || 'https://i.imgur.com/default.png';
+                if (audio.src !== d.musicUrl) audio.src = d.musicUrl;
                 audio.volume = 0.5;
                 if (d.musicAutoplay !== false) {
                     audio.play().catch(() => {});
-                    document.getElementById('playBtn').textContent = '⏸';
-                    document.getElementById('musicCover').classList.add('playing');
                 } else {
-                    document.getElementById('playBtn').textContent = '▶';
+                    audio.pause();
                 }
             } else {
                 mp.classList.add('hidden');
@@ -287,16 +324,12 @@
             }
         });
 
-        function togglePlay() {
-            const audio = document.getElementById('bgMusic');
-            const btn = document.getElementById('playBtn');
-            const cover = document.getElementById('musicCover');
-            if (audio.paused) { audio.play();
-                btn.textContent = '⏸';
-                cover.classList.add('playing'); } else { audio.pause();
-                btn.textContent = '▶';
-                cover.classList.remove('playing'); }
-        }
+        // Kapak fotoğrafı sadece müzik gerçekten çalarken dönsün (buton olmadığı için otomatik takip)
+        const bgAudio = document.getElementById('bgMusic');
+        const musicCoverEl = document.getElementById('musicCover');
+        bgAudio.addEventListener('play', () => musicCoverEl.classList.add('playing'));
+        bgAudio.addEventListener('pause', () => musicCoverEl.classList.remove('playing'));
+        bgAudio.addEventListener('ended', () => musicCoverEl.classList.remove('playing'));
 
         // Sayaç
         const viewRef = db.collection("bio").doc("views");
