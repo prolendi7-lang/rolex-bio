@@ -3,65 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel Pro - Rolex Bio</title>
+    <title>Admin Panel Pro v3 - Rolex Bio</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #0a0a0a; color: white; min-height: 100vh; padding: 20px;
-        }
-        .container { max-width: 650px; margin: 0 auto; }
-        .header { text-align: center; padding: 25px 0; font-size: 26px; font-weight: 700; color: #ff0000; }
-        .card {
-            background: rgba(20,20,20,0.9); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px; padding: 25px; margin-bottom: 15px;
-        }
-        .card h3 { margin-bottom: 15px; color: #ff4444; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        .card h4 { color: #aaa; font-size: 13px; margin: 12px 0 8px; }
-        input, textarea, select {
-            width: 100%; padding: 12px; margin-bottom: 10px;
-            background: #1a1a1a; border: 1px solid #333; border-radius: 10px;
-            color: white; font-size: 14px; font-family: inherit;
-        }
-        input:focus, textarea:focus, select:focus {
-            outline: none; border-color: #ff0000; box-shadow: 0 0 10px rgba(255,0,0,0.2);
-        }
-        input[type="range"] { width: 100%; accent-color: #ff0000; padding: 0; margin: 5px 0; }
-        .range-label { display: flex; justify-content: space-between; font-size: 12px; color: #888; }
-        button {
-            width: 100%; padding: 13px; background: linear-gradient(135deg, #ff0000, #cc0000);
-            color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
-            cursor: pointer; letter-spacing: 1px; transition: all 0.3s; margin-top: 5px;
-        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; padding: 20px; }
+        .container { max-width: 680px; margin: 0 auto; }
+        .header { text-align: center; padding: 25px 0 10px; font-size: 26px; font-weight: 700; background: linear-gradient(135deg, #ff0000, #ff4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card { background: rgba(22,22,22,0.95); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 22px; margin-bottom: 14px; }
+        .card h3 { margin-bottom: 14px; color: #ff4444; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .card h4 { color: #aaa; font-size: 12px; margin: 12px 0 6px; text-transform: uppercase; letter-spacing: 1px; }
+        input, textarea, select { width: 100%; padding: 11px; margin-bottom: 9px; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; color: #fff; font-size: 13px; font-family: inherit; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #ff0000; }
+        input[type="range"] { width: 100%; accent-color: #ff0000; padding: 0; margin: 4px 0; }
+        .range-label { display: flex; justify-content: space-between; font-size: 11px; color: #666; }
+        button { width: 100%; padding: 12px; background: linear-gradient(135deg, #ff0000, #cc0000); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; letter-spacing: 1px; transition: all 0.3s; margin-top: 5px; }
         button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,0,0,0.3); }
-        button.secondary { background: rgba(255,255,255,0.1); margin-top: 8px; }
-        button.danger { background: rgba(255,0,0,0.5); }
-        .link-item {
-            display: flex; gap: 6px; align-items: center; margin-bottom: 8px;
-            padding: 10px; background: #1a1a1a; border-radius: 10px; flex-wrap: wrap;
-        }
-        .link-item input { margin-bottom: 0; flex: 1; min-width: 60px; }
-        .link-item button { width: auto; padding: 8px 10px; font-size: 12px; flex-shrink: 0; }
-        .message {
-            padding: 12px; border-radius: 8px; margin-bottom: 10px;
-            text-align: center; font-size: 14px; display: none;
-        }
+        button.secondary { background: rgba(255,255,255,0.08); }
+        button.danger { background: rgba(255,0,0,0.6); }
+        button.small { width: auto; padding: 7px 14px; font-size: 12px; }
+        .effect-btn { display: inline-block; padding: 8px 14px; margin: 4px; border-radius: 20px; border: 1px solid #333; background: #1a1a1a; color: #ccc; cursor: pointer; font-size: 12px; transition: all 0.2s; }
+        .effect-btn:hover, .effect-btn.active { background: #ff0000; border-color: #ff0000; color: #fff; }
+        .link-item { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; padding: 10px; background: #141414; border-radius: 10px; flex-wrap: wrap; }
+        .link-item input, .link-item select { margin-bottom: 0; flex: 1; min-width: 50px; }
+        .link-item button { width: auto; padding: 7px 10px; font-size: 11px; }
+        .message { padding: 12px; border-radius: 8px; margin-bottom: 10px; text-align: center; font-size: 13px; display: none; }
         .success { background: rgba(0,200,0,0.2); color: #0f0; }
         .error { background: rgba(255,0,0,0.2); color: #f00; }
-        .inline-group { display: flex; gap: 10px; }
-        .inline-group input { flex: 1; }
-        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
-        .toggle-row span { font-size: 14px; }
+        .inline-group { display: flex; gap: 8px; }
+        .inline-group input, .inline-group select { flex: 1; }
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; }
+        .toggle-row span { font-size: 13px; }
         .toggle-row input[type="checkbox"] { width: auto; transform: scale(1.3); accent-color: #ff0000; }
-        #loginScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0a0a0a; display: flex; justify-content: center; align-items: center; z-index: 100;
-        }
+        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0a0a; display: flex; justify-content: center; align-items: center; z-index: 100; }
         #loginBox { background: #1a1a1a; padding: 30px; border-radius: 16px; text-align: center; width: 90%; max-width: 350px; border: 1px solid #333; }
         #loginBox input { text-align: center; font-size: 18px; letter-spacing: 5px; }
         .hidden { display: none !important; }
+        .template-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+        .tpl-btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #ccc; cursor: pointer; font-size: 11px; }
+        .tpl-btn:hover { background: #ff0000; border-color: #ff0000; color: #fff; }
         .preview-link { display: block; text-align: center; color: #ff4444; font-size: 13px; margin-top: 10px; text-decoration: none; }
     </style>
 </head>
@@ -77,81 +58,146 @@
 
     <div id="mainPanel" class="hidden">
         <div class="container">
-            <div class="header">⚙️ Admin Panel Pro</div>
+            <div class="header">⚙️ Admin Panel Pro v3</div>
             <div class="message" id="message"></div>
 
-            <!-- Profil -->
+            <!-- PROFİL -->
             <div class="card">
-                <h3>👤 Profil Ayarları</h3>
+                <h3>👤 Profil</h3>
                 <input type="text" id="nameInput" placeholder="İsim">
-                <textarea id="bioInput" placeholder="Açıklama / Bio" rows="2"></textarea>
-                <input type="text" id="avatarInput" placeholder="Profil fotoğrafı linki">
-                <h4>İsim Yanı Emojiler</h4>
+                <textarea id="bioInput" placeholder="Açıklama" rows="2"></textarea>
+                <input type="text" id="avatarInput" placeholder="Fotoğraf linki">
+
+                <h4>İsim Yanı Emojiler (3D efekti)</h4>
                 <div class="inline-group">
-                    <input type="text" id="emojiLeft" placeholder="Sol emoji (örn: 👑)" maxlength="4">
-                    <input type="text" id="emojiRight" placeholder="Sağ emoji (örn: 💎)" maxlength="4">
+                    <input type="text" id="emojiLeft" placeholder="Sol (👑)" maxlength="4">
+                    <input type="text" id="emojiRight" placeholder="Sağ (💎)" maxlength="4">
                 </div>
-                <h4>İsim Efekti</h4>
-                <input type="text" id="nameGradient" placeholder="Gradient (örn: linear-gradient(135deg, #fff, #f00))">
-                <input type="text" id="nameGlow" placeholder="Glow (örn: 0 0 20px rgba(255,0,0,0.5))">
                 <div class="toggle-row">
-                    <span>✔️ Mavi Tik Rozeti</span>
+                    <span>3D Emoji efekti</span>
+                    <input type="checkbox" id="emoji3d" checked>
+                </div>
+
+                <h4>İsim Efekti Seç</h4>
+                <div id="nameEffectBtns">
+                    <span class="effect-btn active" data-effect="default">Standart</span>
+                    <span class="effect-btn" data-effect="gold">Altın</span>
+                    <span class="effect-btn" data-effect="neon-red">Neon Kırmızı</span>
+                    <span class="effect-btn" data-effect="neon-blue">Neon Mavi</span>
+                    <span class="effect-btn" data-effect="purple">Mor Gradient</span>
+                    <span class="effect-btn" data-effect="rainbow">Rainbow</span>
+                </div>
+                <input type="text" id="nameGradient" placeholder="Özel gradient">
+                <div class="inline-group">
+                    <input type="text" id="nameGlow" placeholder="Glow gölge">
+                    <input type="text" id="neonColor" placeholder="Neon rengi">
+                </div>
+                <input type="range" id="neonSize" min="2" max="40" value="10" oninput="document.getElementById('ns').textContent=this.value+'px'">
+                <div class="range-label"><span>Neon boyutu</span><span id="ns">10px</span></div>
+
+                <h4>Rozet (Mavi Tik)</h4>
+                <div class="toggle-row">
+                    <span>Rozeti göster</span>
                     <input type="checkbox" id="showBadge" checked>
                 </div>
-                <h4>Kart Saydamlığı</h4>
-                <input type="range" id="opacitySlider" min="30" max="100" value="85" oninput="document.getElementById('opacityVal').textContent=this.value+'%'">
-                <div class="range-label"><span>Daha saydam</span><span id="opacityVal">85%</span><span>Daha opak</span></div>
+                <div class="inline-group">
+                    <input type="text" id="badgeIcon" placeholder="Rozet ikon (✓, ★, 🔥)" maxlength="2">
+                    <input type="text" id="badgeColor" placeholder="Rozet rengi">
+                </div>
+
+                <h4>Kart Saydamlık & Bulanıklık</h4>
+                <input type="range" id="cardOpacity" min="20" max="100" value="85" oninput="document.getElementById('cov').textContent=this.value+'%'">
+                <div class="range-label"><span>Saydamlık</span><span id="cov">85%</span></div>
+                <input type="range" id="cardBlur" min="0" max="40" value="20" oninput="document.getElementById('cbv').textContent=this.value+'px'">
+                <div class="range-label"><span>Blur</span><span id="cbv">20px</span></div>
+
                 <button onclick="saveProfile()">💾 Profili Kaydet</button>
             </div>
 
-            <!-- Linkler -->
+            <!-- LİNKLER -->
             <div class="card">
-                <h3>🔗 Linkler</h3>
+                <h3>🔗 Linkler & Şablonlar</h3>
+                <h4>Hazır Şablon Ekle</h4>
+                <div class="template-btns">
+                    <span class="tpl-btn" data-tpl="telegram">📱 Telegram</span>
+                    <span class="tpl-btn" data-tpl="discord">🎮 Discord</span>
+                    <span class="tpl-btn" data-tpl="youtube">▶️ YouTube</span>
+                    <span class="tpl-btn" data-tpl="instagram">📷 Instagram</span>
+                    <span class="tpl-btn" data-tpl="tiktok">🎵 TikTok</span>
+                    <span class="tpl-btn" data-tpl="twitch">📺 Twitch</span>
+                    <span class="tpl-btn" data-tpl="steam">🎯 Steam</span>
+                    <span class="tpl-btn" data-tpl="spotify">🎧 Spotify</span>
+                    <span class="tpl-btn" data-tpl="github">💻 GitHub</span>
+                    <span class="tpl-btn" data-tpl="website">🌐 Website</span>
+                </div>
                 <div id="linksList"></div>
-                <button class="secondary" onclick="addLink()">+ Yeni Link Ekle</button>
-                <button onclick="saveLinks()" style="margin-top:10px;">💾 Linkleri Kaydet</button>
+                <button class="secondary" onclick="addLink()">+ Boş Link Ekle</button>
+
+                <h4>Buton Efektleri</h4>
+                <div class="toggle-row">
+                    <span>Kenar parlaması (Glow)</span>
+                    <input type="checkbox" id="btnGlow" checked>
+                </div>
+                <div class="toggle-row">
+                    <span>Işık kayması (Shimmer)</span>
+                    <input type="checkbox" id="btnShimmer" checked>
+                </div>
+                <h4>Buton Renkleri</h4>
+                <div class="inline-group">
+                    <input type="text" id="btnBgColor" placeholder="Arka plan rengi">
+                    <input type="text" id="btnBorderColor" placeholder="Kenar rengi">
+                </div>
+                <div class="inline-group">
+                    <input type="text" id="btnHoverColor" placeholder="Hover arka plan">
+                    <input type="text" id="btnHoverBorder" placeholder="Hover kenar">
+                </div>
+                <button onclick="saveLinks()" style="margin-top:10px;">💾 Linkleri & Butonları Kaydet</button>
             </div>
 
-            <!-- Arka Plan -->
+            <!-- ARKA PLAN -->
             <div class="card">
                 <h3>🎨 Arka Plan</h3>
-                <input type="text" id="bgColor" placeholder="Arka plan rengi (örn: #0a0a0a veya linear-gradient...)">
-                <input type="text" id="bgImage" placeholder="Arka plan resim linki (rengi ezer)">
-                <h4>Partikül Efekti</h4>
+                <input type="text" id="bgColor" placeholder="Renk / Gradient">
+                <input type="text" id="bgImage" placeholder="Resim linki">
+                <h4>Partiküller</h4>
                 <div class="toggle-row">
-                    <span>Partikülleri Aç</span>
+                    <span>Aktif</span>
                     <input type="checkbox" id="particlesToggle" checked>
                 </div>
-                <input type="text" id="particleColor" placeholder="Partikül rengi (örn: rgba(255,0,0,0.6))">
-                <input type="range" id="particleCount" min="10" max="150" value="50" oninput="document.getElementById('particleVal').textContent=this.value">
-                <div class="range-label"><span>Az</span><span id="particleVal">50</span><span>Çok</span></div>
+                <input type="text" id="particleColor" placeholder="Renk (rgba)">
+                <input type="range" id="particleCount" min="10" max="150" value="40" oninput="document.getElementById('pv').textContent=this.value">
+                <div class="range-label"><span>Adet</span><span id="pv">40</span></div>
                 <button onclick="saveBackground()">💾 Arka Planı Kaydet</button>
             </div>
 
-            <!-- Müzik -->
+            <!-- MÜZİK -->
             <div class="card">
                 <h3>🎵 Müzik Çalar</h3>
-                <input type="text" id="musicUrl" placeholder="Müzik dosyası linki (mp3 linki)">
-                <input type="text" id="musicTitleInput" placeholder="Müzik adı">
-                <input type="text" id="musicArtist" placeholder="Sanatçı">
-                <input type="text" id="musicCover" placeholder="Plak / Kapak fotoğrafı linki">
-                <input type="range" id="musicVolume" min="0" max="100" value="50" oninput="document.getElementById('volVal').textContent=this.value">
-                <div class="range-label"><span>Ses: </span><span id="volVal">50</span></div>
+                <input type="text" id="musicUrl" placeholder="MP3 linki">
+                <div class="inline-group">
+                    <input type="text" id="musicTitleInput" placeholder="Müzik adı">
+                    <input type="text" id="musicArtist" placeholder="Sanatçı">
+                </div>
+                <input type="text" id="musicCover" placeholder="Kapak foto linki">
                 <div class="toggle-row">
                     <span>Otomatik çal</span>
                     <input type="checkbox" id="musicAutoplay" checked>
                 </div>
-                <button onclick="saveMusic()">💾 Müzik Ayarlarını Kaydet</button>
-                <p style="font-size:11px;color:#666;margin-top:8px;">Müzik linki için: dosyaup.com veya catbox.moe kullanabilirsin</p>
+                <h4>Müzik Kartı Saydamlık</h4>
+                <input type="range" id="musicOpacity" min="20" max="100" value="90" oninput="document.getElementById('mov').textContent=this.value+'%'">
+                <div class="range-label"><span>Saydamlık</span><span id="mov">90%</span></div>
+                <input type="range" id="musicBlur" min="0" max="30" value="10" oninput="document.getElementById('mbv').textContent=this.value+'px'">
+                <div class="range-label"><span>Blur</span><span id="mbv">10px</span></div>
+                <button onclick="saveMusic()">💾 Müziği Kaydet</button>
             </div>
 
-            <!-- İstatistik -->
+            <!-- İSTATİSTİK -->
             <div class="card">
-                <h3>📊 İstatistikler</h3>
-                <p style="font-size:18px;">👁 Toplam: <strong id="totalViews">0</strong></p>
+                <h3>📊 İstatistik</h3>
+                <p style="font-size:18px;">👁 <strong id="totalViews">0</strong> görüntülenme</p>
                 <a href="index.html" target="_blank" class="preview-link">🔍 Bio Sayfasını Gör →</a>
             </div>
-            <p style="text-align:center;color:#555;font-size:12px;padding-bottom:30px;">Admin Panel Pro v2.0</p>
+            <p style="text-align:center;color:#333;font-size:11px;padding-bottom:30px;">Admin Panel Pro v3</p>
         </div>
     </div>
 
@@ -166,18 +212,39 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const CORRECT_PASS = "Er11er11";
+        const PASS = "Er11er11";
         let currentLinks = [];
 
+        const EFFECTS = {
+            'default': { gradient: 'linear-gradient(135deg, #ffffff, #cccccc)', glow: 'none', neon: false },
+            'gold': { gradient: 'linear-gradient(135deg, #ffd700, #ffaa00, #ffd700)', glow: '0 0 15px rgba(255,200,0,0.6)', neon: false },
+            'neon-red': { gradient: 'linear-gradient(135deg, #fff, #fff)', glow: 'none', neon: true, neonColor: '#ff0000', neonSize: 10 },
+            'neon-blue': { gradient: 'linear-gradient(135deg, #fff, #fff)', glow: 'none', neon: true, neonColor: '#00aaff', neonSize: 10 },
+            'purple': { gradient: 'linear-gradient(135deg, #c084fc, #7c3aed)', glow: '0 0 20px rgba(168,85,247,0.5)', neon: false },
+            'rainbow': { gradient: 'linear-gradient(135deg, #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #8800ff)', glow: '0 0 15px rgba(255,255,255,0.4)', neon: false }
+        };
+        let selectedEffect = 'default';
+
+        const TEMPLATES = {
+            'telegram': { icon: '📱', title: 'Telegram', url: 'https://t.me/kullaniciadi' },
+            'discord': { icon: '🎮', title: 'Discord', url: 'https://discord.gg/sunucu' },
+            'youtube': { icon: '▶️', title: 'YouTube', url: 'https://youtube.com/@kanal' },
+            'instagram': { icon: '📷', title: 'Instagram', url: 'https://instagram.com/kullaniciadi' },
+            'tiktok': { icon: '🎵', title: 'TikTok', url: 'https://tiktok.com/@kullaniciadi' },
+            'twitch': { icon: '📺', title: 'Twitch', url: 'https://twitch.tv/kullaniciadi' },
+            'steam': { icon: '🎯', title: 'Steam', url: 'https://steamcommunity.com/id/kullaniciadi' },
+            'spotify': { icon: '🎧', title: 'Spotify', url: 'https://open.spotify.com/user/kullaniciadi' },
+            'github': { icon: '💻', title: 'GitHub', url: 'https://github.com/kullaniciadi' },
+            'website': { icon: '🌐', title: 'Website', url: 'https://' }
+        };
+
         function login() {
-            if (document.getElementById('passInput').value === CORRECT_PASS) {
+            if (document.getElementById('passInput').value === PASS) {
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('mainPanel').classList.remove('hidden');
                 loadData();
                 sessionStorage.setItem('admin_logged', '1');
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
+            } else { document.getElementById('loginError').style.display = 'block'; }
         }
         if (sessionStorage.getItem('admin_logged') === '1') {
             document.getElementById('loginScreen').classList.add('hidden');
@@ -185,44 +252,59 @@
             loadData();
         }
 
-        function showMessage(text, type) {
-            const msg = document.getElementById('message');
-            msg.textContent = text;
-            msg.className = 'message ' + type;
-            msg.style.display = 'block';
-            setTimeout(() => msg.style.display = 'none', 3000);
+        function msg(t, ty) {
+            const m = document.getElementById('message');
+            m.textContent = t;
+            m.className = 'message ' + ty;
+            m.style.display = 'block';
+            setTimeout(() => m.style.display = 'none', 2500);
         }
 
         function loadData() {
             db.collection("bio").doc("profile").get().then(doc => {
-                if (doc.exists) {
-                    const d = doc.data();
-                    document.getElementById('nameInput').value = d.name || '';
-                    document.getElementById('bioInput').value = d.bio || '';
-                    document.getElementById('avatarInput').value = d.avatar || '';
-                    document.getElementById('emojiLeft').value = d.emojiLeft || '';
-                    document.getElementById('emojiRight').value = d.emojiRight || '';
-                    document.getElementById('nameGradient').value = d.nameGradient || '';
-                    document.getElementById('nameGlow').value = d.nameGlow || '';
-                    document.getElementById('showBadge').checked = d.showBadge !== false;
-                    document.getElementById('opacitySlider').value = (d.opacity || 0.85) * 100;
-                    document.getElementById('opacityVal').textContent = Math.round((d.opacity || 0.85) * 100) + '%';
-                    document.getElementById('bgColor').value = d.bgColor || '';
-                    document.getElementById('bgImage').value = d.bgImage || '';
-                    document.getElementById('particlesToggle').checked = d.particles !== false;
-                    document.getElementById('particleColor').value = d.particleColor || '';
-                    document.getElementById('particleCount').value = d.particleCount || 50;
-                    document.getElementById('particleVal').textContent = d.particleCount || 50;
-                    document.getElementById('musicUrl').value = d.musicUrl || '';
-                    document.getElementById('musicTitleInput').value = d.musicTitle || '';
-                    document.getElementById('musicArtist').value = d.musicArtist || '';
-                    document.getElementById('musicCover').value = d.musicCover || '';
-                    document.getElementById('musicVolume').value = d.musicVolume || 50;
-                    document.getElementById('volVal').textContent = d.musicVolume || 50;
-                    document.getElementById('musicAutoplay').checked = d.musicAutoplay !== false;
-                    currentLinks = d.links || [];
-                    renderLinks();
-                }
+                if (!doc.exists) return;
+                const d = doc.data();
+                document.getElementById('nameInput').value = d.name || '';
+                document.getElementById('bioInput').value = d.bio || '';
+                document.getElementById('avatarInput').value = d.avatar || '';
+                document.getElementById('emojiLeft').value = d.emojiLeft || '';
+                document.getElementById('emojiRight').value = d.emojiRight || '';
+                document.getElementById('emoji3d').checked = d.emoji3d !== false;
+                document.getElementById('nameGradient').value = d.nameGradient || '';
+                document.getElementById('nameGlow').value = d.nameGlow || '';
+                document.getElementById('neonColor').value = d.neonColor || '';
+                document.getElementById('neonSize').value = d.neonSize || 10;
+                document.getElementById('ns').textContent = (d.neonSize || 10) + 'px';
+                document.getElementById('showBadge').checked = d.showBadge !== false;
+                document.getElementById('badgeIcon').value = d.badgeIcon || '✓';
+                document.getElementById('badgeColor').value = d.badgeColor || '';
+                document.getElementById('cardOpacity').value = (d.cardOpacity || 0.85) * 100;
+                document.getElementById('cov').textContent = Math.round((d.cardOpacity || 0.85) * 100) + '%';
+                document.getElementById('cardBlur').value = d.cardBlur || 20;
+                document.getElementById('cbv').textContent = (d.cardBlur || 20) + 'px';
+                document.getElementById('bgColor').value = d.bgColor || '';
+                document.getElementById('bgImage').value = d.bgImage || '';
+                document.getElementById('particlesToggle').checked = d.particles !== false;
+                document.getElementById('particleColor').value = d.particleColor || '';
+                document.getElementById('particleCount').value = d.particleCount || 40;
+                document.getElementById('pv').textContent = d.particleCount || 40;
+                document.getElementById('btnGlow').checked = d.btnGlow !== false;
+                document.getElementById('btnShimmer').checked = d.btnShimmer !== false;
+                document.getElementById('btnBgColor').value = d.btnBgColor || '';
+                document.getElementById('btnBorderColor').value = d.btnBorderColor || '';
+                document.getElementById('btnHoverColor').value = d.btnHoverColor || '';
+                document.getElementById('btnHoverBorder').value = d.btnHoverBorder || '';
+                document.getElementById('musicUrl').value = d.musicUrl || '';
+                document.getElementById('musicTitleInput').value = d.musicTitle || '';
+                document.getElementById('musicArtist').value = d.musicArtist || '';
+                document.getElementById('musicCover').value = d.musicCover || '';
+                document.getElementById('musicAutoplay').checked = d.musicAutoplay !== false;
+                document.getElementById('musicOpacity').value = (d.musicOpacity || 0.9) * 100;
+                document.getElementById('mov').textContent = Math.round((d.musicOpacity || 0.9) * 100) + '%';
+                document.getElementById('musicBlur').value = d.musicBlur || 10;
+                document.getElementById('mbv').textContent = (d.musicBlur || 10) + 'px';
+                currentLinks = d.links || [];
+                renderLinks();
             });
             db.collection("bio").doc("views").get().then(doc => {
                 document.getElementById('totalViews').textContent = doc.exists ? (doc.data().count || 0) : 0;
@@ -230,18 +312,18 @@
         }
 
         function renderLinks() {
-            const container = document.getElementById('linksList');
-            container.innerHTML = '';
-            currentLinks.forEach((link, i) => {
-                const div = document.createElement('div');
-                div.className = 'link-item';
-                div.innerHTML = `
-                    <input type="text" placeholder="İkon" value="${link.icon || '🔗'}" style="width:45px;" onchange="currentLinks[${i}].icon=this.value">
-                    <input type="text" placeholder="Başlık" value="${link.title}" onchange="currentLinks[${i}].title=this.value">
-                    <input type="text" placeholder="URL" value="${link.url}" onchange="currentLinks[${i}].url=this.value">
+            const c = document.getElementById('linksList');
+            c.innerHTML = '';
+            currentLinks.forEach((l, i) => {
+                const d = document.createElement('div');
+                d.className = 'link-item';
+                d.innerHTML = `
+                    <input type="text" placeholder="İkon" value="${l.icon||'🔗'}" style="width:45px;" onchange="currentLinks[${i}].icon=this.value">
+                    <input type="text" placeholder="Başlık" value="${l.title}" onchange="currentLinks[${i}].title=this.value">
+                    <input type="text" placeholder="URL" value="${l.url}" onchange="currentLinks[${i}].url=this.value">
                     <button class="danger" onclick="deleteLink(${i})">✕</button>
                 `;
-                container.appendChild(div);
+                c.appendChild(d);
             });
         }
 
@@ -253,28 +335,42 @@
 
         function saveLinks() {
             document.querySelectorAll('#linksList .link-item').forEach((item, i) => {
-                const inputs = item.querySelectorAll('input');
-                currentLinks[i] = { icon: inputs[0].value, title: inputs[1].value, url: inputs[2].value };
+                const ins = item.querySelectorAll('input');
+                currentLinks[i] = { icon: ins[0].value, title: ins[1].value, url: ins[2].value };
             });
-            db.collection("bio").doc("profile").update({ links: currentLinks })
-                .then(() => showMessage('Linkler kaydedildi!', 'success'))
-                .catch(() => showMessage('Hata!', 'error'));
+            db.collection("bio").doc("profile").update({
+                links: currentLinks,
+                btnGlow: document.getElementById('btnGlow').checked,
+                btnShimmer: document.getElementById('btnShimmer').checked,
+                btnBgColor: document.getElementById('btnBgColor').value,
+                btnBorderColor: document.getElementById('btnBorderColor').value,
+                btnHoverColor: document.getElementById('btnHoverColor').value,
+                btnHoverBorder: document.getElementById('btnHoverBorder').value
+            }).then(() => msg('Kaydedildi!', 'success')).catch(() => msg('Hata!', 'error'));
         }
 
         function saveProfile() {
-            db.collection("bio").doc("profile").set({
+            const ef = EFFECTS[selectedEffect];
+            const data = {
                 name: document.getElementById('nameInput').value,
                 bio: document.getElementById('bioInput').value,
                 avatar: document.getElementById('avatarInput').value,
                 emojiLeft: document.getElementById('emojiLeft').value,
                 emojiRight: document.getElementById('emojiRight').value,
-                nameGradient: document.getElementById('nameGradient').value,
-                nameGlow: document.getElementById('nameGlow').value,
+                emoji3d: document.getElementById('emoji3d').checked,
+                nameGradient: document.getElementById('nameGradient').value || ef.gradient,
+                nameGlow: document.getElementById('nameGlow').value || ef.glow,
+                nameNeon: ef.neon,
+                neonColor: document.getElementById('neonColor').value || ef.neonColor,
+                neonSize: parseInt(document.getElementById('neonSize').value),
                 showBadge: document.getElementById('showBadge').checked,
-                opacity: parseInt(document.getElementById('opacitySlider').value) / 100
-            }, { merge: true })
-                .then(() => showMessage('Profil kaydedildi!', 'success'))
-                .catch(() => showMessage('Hata!', 'error'));
+                badgeIcon: document.getElementById('badgeIcon').value,
+                badgeColor: document.getElementById('badgeColor').value,
+                cardOpacity: parseInt(document.getElementById('cardOpacity').value) / 100,
+                cardBlur: parseInt(document.getElementById('cardBlur').value)
+            };
+            db.collection("bio").doc("profile").set(data, { merge: true })
+                .then(() => msg('Profil kaydedildi!', 'success')).catch(() => msg('Hata!', 'error'));
         }
 
         function saveBackground() {
@@ -284,8 +380,7 @@
                 particles: document.getElementById('particlesToggle').checked,
                 particleColor: document.getElementById('particleColor').value,
                 particleCount: parseInt(document.getElementById('particleCount').value)
-            }).then(() => showMessage('Arka plan kaydedildi!', 'success'))
-                .catch(() => showMessage('Hata!', 'error'));
+            }).then(() => msg('Arka plan kaydedildi!', 'success')).catch(() => msg('Hata!', 'error'));
         }
 
         function saveMusic() {
@@ -294,11 +389,39 @@
                 musicTitle: document.getElementById('musicTitleInput').value,
                 musicArtist: document.getElementById('musicArtist').value,
                 musicCover: document.getElementById('musicCover').value,
-                musicVolume: parseInt(document.getElementById('musicVolume').value),
-                musicAutoplay: document.getElementById('musicAutoplay').checked
-            }).then(() => showMessage('Müzik ayarları kaydedildi!', 'success'))
-                .catch(() => showMessage('Hata!', 'error'));
+                musicAutoplay: document.getElementById('musicAutoplay').checked,
+                musicOpacity: parseInt(document.getElementById('musicOpacity').value) / 100,
+                musicBlur: parseInt(document.getElementById('musicBlur').value)
+            }).then(() => msg('Müzik kaydedildi!', 'success')).catch(() => msg('Hata!', 'error'));
         }
+
+        // Efekt butonları
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('effect-btn')) {
+                document.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                selectedEffect = e.target.dataset.effect;
+            }
+            if (e.target.classList.contains('tpl-btn')) {
+                const tpl = TEMPLATES[e.target.dataset.tpl];
+                if (tpl) { currentLinks.push({ ...tpl });
+                    renderLinks(); }
+            }
+        });
+
+        // Range güncellemeleri
+        document.getElementById('cardOpacity').addEventListener('input', function() { document.getElementById('cov')
+                .textContent = this.value + '%'; });
+        document.getElementById('cardBlur').addEventListener('input', function() { document.getElementById('cbv')
+                .textContent = this.value + 'px'; });
+        document.getElementById('particleCount').addEventListener('input', function() { document.getElementById('pv')
+                .textContent = this.value; });
+        document.getElementById('neonSize').addEventListener('input', function() { document.getElementById('ns')
+                .textContent = this.value + 'px'; });
+        document.getElementById('musicOpacity').addEventListener('input', function() { document.getElementById('mov')
+                .textContent = this.value + '%'; });
+        document.getElementById('musicBlur').addEventListener('input', function() { document.getElementById('mbv')
+                .textContent = this.value + 'px'; });
     </script>
 </body>
 </html>
