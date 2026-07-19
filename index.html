@@ -8,41 +8,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            min-height: 100vh;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow-x: hidden;
-            transition: background 0.5s;
+            min-height: 100vh; color: white;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; overflow-x: hidden;
             background: #0a0a0a;
         }
-
-        body.custom-bg {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }
-
-        .bg-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-
         .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
         .particle {
-            position: absolute;
-            width: 2px; height: 2px;
-            background: rgba(255,255,255,0.6);
-            border-radius: 50%;
-            animation: floatUp linear infinite;
+            position: absolute; width: 3px; height: 3px;
+            border-radius: 50%; animation: floatUp linear infinite;
         }
         @keyframes floatUp {
             0% { transform: translateY(100vh) scale(0); opacity: 0; }
@@ -50,132 +26,101 @@
             90% { opacity: 1; }
             100% { transform: translateY(-100px) scale(1); opacity: 0; }
         }
-
         .container { position: relative; z-index: 1; max-width: 500px; width: 100%; text-align: center; }
-
         .profile-card {
-            border-radius: 24px;
-            padding: 40px 30px 35px;
+            border-radius: 24px; padding: 40px 30px 35px;
             border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             animation: fadeInUp 0.8s ease;
-            transition: all 0.5s;
-            background: rgba(20,20,20,0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
-
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .avatar-container { position: relative; display: inline-block; margin-bottom: 20px; }
         .avatar {
-            width: 100px; height: 100px;
-            border-radius: 50%;
-            border: 3px solid rgba(255,255,255,0.3);
-            object-fit: cover;
-            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.3); object-fit: cover;
             transition: all 0.3s;
         }
         .avatar:hover { transform: scale(1.05); }
-
         .badge {
             position: absolute; bottom: 5px; right: 5px;
-            color: white; width: 28px; height: 28px;
-            border-radius: 50%;
+            color: white; width: 28px; height: 28px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-size: 14px; border: 2px solid #0a0a0a;
-            box-shadow: 0 0 15px rgba(0,150,255,0.5);
             animation: pulse 2s infinite;
-            background: linear-gradient(135deg, #1da1f2, #0d8bd9);
         }
         .badge.hidden { display: none; }
         @keyframes pulse {
             0%,100% { box-shadow: 0 0 15px rgba(0,150,255,0.5); }
             50% { box-shadow: 0 0 30px rgba(0,150,255,0.8); }
         }
-
-        .name-container { margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .name-container { margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .name-emoji { font-size: 24px; display: inline-block; }
+        .name-emoji.d3 { text-shadow: 2px 2px 0 rgba(0,0,0,0.3); transform: perspective(100px) rotateY(-5deg); }
         .name {
             font-size: 28px; font-weight: 700; letter-spacing: 1px;
             background: linear-gradient(135deg, #ffffff, #cccccc);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        .name-emoji { font-size: 22px; }
-
-        .bio-text { color: #999; font-size: 14px; margin-bottom: 25px; line-height: 1.5; }
-
+        .bio-text { color: #aaa; font-size: 14px; margin-bottom: 25px; line-height: 1.5; }
         .links { display: flex; flex-direction: column; gap: 12px; }
-
         .link-btn {
             display: flex; align-items: center; gap: 12px;
             padding: 14px 20px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 14px;
-            color: white; text-decoration: none;
-            font-size: 15px; font-weight: 500;
-            transition: all 0.3s;
+            border-radius: 14px; color: white; text-decoration: none;
+            font-size: 15px; font-weight: 500; transition: all 0.3s;
             position: relative; overflow: hidden;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.12);
         }
-        .link-btn:hover { border-color: rgba(255,255,255,0.3); transform: translateX(5px); box-shadow: 0 5px 25px rgba(255,255,255,0.08); background: rgba(255,255,255,0.07); }
-        .link-icon { font-size: 20px; width: 24px; text-align: center; flex-shrink: 0; }
+        .link-btn:hover { transform: translateY(-2px); }
+        .link-btn.glow-active::after {
+            content: ''; position: absolute; top: -2px; left: -100%; width: 60%; height: calc(100% + 4px);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer { 0% { left: -100%; } 100% { left: 200%; } }
+        .link-btn.glow-border {
+            box-shadow: 0 0 15px rgba(255,255,255,0.1), 0 0 30px rgba(255,255,255,0.03);
+        }
+        .link-icon { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
         .link-title { flex: 1; text-align: left; }
         .link-arrow { opacity: 0.3; transition: all 0.3s; font-size: 18px; }
         .link-btn:hover .link-arrow { opacity: 1; transform: translateX(3px); }
-
-        /* Müzik Çalar */
         .music-player {
-            margin-top: 20px;
-            background: rgba(20,20,20,0.9);
-            border-radius: 16px;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            margin-top: 20px; border-radius: 16px; padding: 15px 20px;
+            display: flex; align-items: center; gap: 15px;
             border: 1px solid rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
             animation: fadeInUp 1s ease;
         }
         .music-player.hidden { display: none; }
         .music-cover {
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
+            width: 50px; height: 50px; border-radius: 50%; object-fit: cover;
             border: 2px solid rgba(255,255,255,0.2);
-            animation: spin 4s linear infinite;
-            animation-play-state: paused;
+            animation: spin 4s linear infinite; animation-play-state: paused;
         }
         .music-cover.playing { animation-play-state: running; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .music-info { flex: 1; text-align: left; }
         .music-title { font-size: 13px; font-weight: 600; }
         .music-artist { font-size: 11px; color: #888; }
-        .music-controls { display: flex; gap: 8px; }
         .music-btn {
-            width: 36px; height: 36px;
-            border-radius: 50%;
+            width: 40px; height: 40px; border-radius: 50%;
             border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.05);
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
+            background: rgba(255,255,255,0.05); color: white;
+            font-size: 18px; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             transition: all 0.3s;
         }
-        .music-btn:hover { background: rgba(255,255,255,0.15); }
-        .music-volume { width: 60px; accent-color: #fff; }
-
-        .footer { margin-top: 15px; font-size: 12px; color: #555; letter-spacing: 1px; }
+        .music-btn:hover { background: rgba(255,255,255,0.2); }
         .view-count {
             display: inline-flex; align-items: center; gap: 5px;
-            background: rgba(255,255,255,0.05);
-            padding: 6px 14px; border-radius: 20px;
-            font-size: 12px; color: #999; margin-top: 15px;
+            background: rgba(255,255,255,0.05); padding: 6px 14px;
+            border-radius: 20px; font-size: 12px; color: #999; margin-top: 15px;
         }
-
         @media (max-width: 480px) {
             .profile-card { padding: 30px 20px 25px; }
             .name { font-size: 24px; }
@@ -185,9 +130,7 @@
     </style>
 </head>
 <body>
-    <div class="bg-overlay" id="bgOverlay"></div>
     <div class="particles" id="particles"></div>
-
     <div class="container">
         <div class="profile-card" id="profileCard">
             <div class="avatar-container">
@@ -200,27 +143,18 @@
                 <span class="name-emoji" id="nameEmojiRight"></span>
             </div>
             <p class="bio-text" id="bioDisplay">Yükleniyor...</p>
-            <div class="links" id="linksContainer">
-                <div class="link-btn" style="justify-content:center; opacity:0.5;">Yükleniyor...</div>
-            </div>
-            <div class="view-count">👁 <span id="viewCount">0</span> görüntülenme</div>
+            <div class="links" id="linksContainer"></div>
+            <div class="view-count">👁 <span id="viewCount">0</span></div>
         </div>
-
         <div class="music-player hidden" id="musicPlayer">
             <img class="music-cover" id="musicCover" src="https://i.imgur.com/default.png" alt="cover">
             <div class="music-info">
                 <div class="music-title" id="musicTitle">Müzik</div>
                 <div class="music-artist" id="musicArtist">Sanatçı</div>
             </div>
-            <div class="music-controls">
-                <button class="music-btn" id="playBtn" onclick="togglePlay()">▶</button>
-                <input type="range" class="music-volume" id="volumeSlider" min="0" max="100" value="50" onchange="setVolume(this.value)">
-            </div>
+            <button class="music-btn" id="playBtn" onclick="togglePlay()">▶</button>
         </div>
-
-        <div class="footer">🔗 Powered by Rolex</div>
     </div>
-
     <audio id="bgMusic" loop style="display:none;"></audio>
 
     <script>
@@ -235,106 +169,121 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Verileri çek
         db.collection("bio").doc("profile").onSnapshot((doc) => {
-            if (doc.exists) {
-                const d = doc.data();
-                document.getElementById('nameDisplay').textContent = d.name || 'İsimsiz';
-                document.getElementById('bioDisplay').textContent = d.bio || '';
-                document.getElementById('avatar').src = d.avatar || 'https://i.imgur.com/default.png';
-                document.getElementById('nameEmojiLeft').textContent = d.emojiLeft || '';
-                document.getElementById('nameEmojiRight').textContent = d.emojiRight || '';
-                document.title = (d.name || 'Bio') + ' | Bio';
+            if (!doc.exists) return;
+            const d = doc.data();
 
-                // Rozet
-                const badge = document.getElementById('badge');
-                if (d.showBadge === false) badge.classList.add('hidden');
-                else badge.classList.remove('hidden');
+            // İsim
+            document.getElementById('nameDisplay').textContent = d.name || 'İsimsiz';
+            document.getElementById('bioDisplay').textContent = d.bio || '';
+            document.getElementById('avatar').src = d.avatar || 'https://i.imgur.com/default.png';
 
-                // Saydamlık
-                document.getElementById('profileCard').style.background =
-                    `rgba(20,20,20,${d.opacity != null ? d.opacity : 0.85})`;
+            // Emojiler 3D
+            const el = document.getElementById('nameEmojiLeft');
+            const er = document.getElementById('nameEmojiRight');
+            el.textContent = d.emojiLeft || '';
+            er.textContent = d.emojiRight || '';
+            el.className = 'name-emoji' + (d.emoji3d ? ' d3' : '');
+            er.className = 'name-emoji' + (d.emoji3d ? ' d3' : '');
 
-                // İsim efekti
-                const nameEl = document.getElementById('nameDisplay');
-                nameEl.style.background = d.nameGradient || 'linear-gradient(135deg, #ffffff, #cccccc)';
-                nameEl.style.webkitBackgroundClip = 'text';
-                nameEl.style.webkitTextFillColor = 'transparent';
-                nameEl.style.backgroundClip = 'text';
-                if (d.nameGlow) nameEl.style.textShadow = d.nameGlow;
+            document.title = (d.name || 'Bio') + ' | Bio';
 
-                // Buton efekti
-                document.querySelectorAll('.link-btn').forEach(btn => {
-                    btn.onmouseenter = null;
-                    btn.onmouseleave = null;
+            // Rozet
+            const badge = document.getElementById('badge');
+            if (d.showBadge === false) badge.classList.add('hidden');
+            else { badge.classList.remove('hidden');
+                badge.textContent = d.badgeIcon || '✓';
+                badge.style.background = d.badgeColor || 'linear-gradient(135deg, #1da1f2, #0d8bd9)'; }
+
+            // Saydamlık
+            document.getElementById('profileCard').style.background =
+                `rgba(20,20,20,${d.cardOpacity != null ? d.cardOpacity : 0.85})`;
+            document.getElementById('profileCard').style.backdropFilter =
+                `blur(${d.cardBlur != null ? d.cardBlur : 20}px)`;
+            document.getElementById('profileCard').style.webkitBackdropFilter =
+                `blur(${d.cardBlur != null ? d.cardBlur : 20}px)`;
+
+            // İsim efekti
+            const nameEl = document.getElementById('nameDisplay');
+            nameEl.style.background = d.nameGradient || 'linear-gradient(135deg, #ffffff, #cccccc)';
+            nameEl.style.webkitBackgroundClip = 'text';
+            nameEl.style.webkitTextFillColor = 'transparent';
+            nameEl.style.backgroundClip = 'text';
+            nameEl.style.textShadow = d.nameGlow || 'none';
+            nameEl.style.filter = d.nameNeon ? `drop-shadow(0 0 ${d.neonSize || 10}px ${d.neonColor || '#fff'})` : 'none';
+
+            // Arka plan
+            document.body.style.background = d.bgImage ? `url(${d.bgImage}) center/cover no-repeat fixed` : (d.bgColor || '#0a0a0a');
+            document.body.style.backgroundColor = d.bgColor || '#0a0a0a';
+
+            // Partikül
+            const pc = document.getElementById('particles');
+            pc.innerHTML = '';
+            if (d.particles !== false) {
+                const count = d.particleCount || 40;
+                const color = d.particleColor || 'rgba(255,255,255,0.5)';
+                for (let i = 0; i < count; i++) {
+                    const p = document.createElement('div');
+                    p.classList.add('particle');
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                    p.style.animationDelay = Math.random() * 5 + 's';
+                    p.style.background = color;
+                    pc.appendChild(p);
+                }
+            }
+
+            // Linkler
+            const lc = document.getElementById('linksContainer');
+            lc.innerHTML = '';
+            const btnGlow = d.btnGlow !== false;
+            const btnShimmer = d.btnShimmer !== false;
+            if (d.links && d.links.length > 0) {
+                d.links.forEach(link => {
+                    const a = document.createElement('a');
+                    a.href = link.url;
+                    a.target = '_blank';
+                    a.className = 'link-btn';
+                    if (btnGlow) a.classList.add('glow-border');
+                    if (btnShimmer) a.classList.add('glow-active');
+                    if (d.btnBgColor) a.style.background = d.btnBgColor;
+                    if (d.btnBorderColor) a.style.borderColor = d.btnBorderColor;
+                    if (d.btnHoverColor) {
+                        a.onmouseenter = () => { a.style.background = d.btnHoverColor;
+                            a.style.borderColor = d.btnHoverBorder || d.btnHoverColor; };
+                        a.onmouseleave = () => { a.style.background = d.btnBgColor || 'rgba(255,255,255,0.05)';
+                            a.style.borderColor = d.btnBorderColor || 'rgba(255,255,255,0.12)'; };
+                    }
+                    a.innerHTML = `<span class="link-icon">${link.icon || '🔗'}</span><span class="link-title">${link.title}</span><span class="link-arrow">→</span>`;
+                    lc.appendChild(a);
                 });
+            } else {
+                lc.innerHTML = '<div class="link-btn" style="justify-content:center;opacity:0.5;">Henüz link eklenmedi</div>';
+            }
 
-                // Arka plan
-                if (d.bgImage) {
-                    document.body.classList.add('custom-bg');
-                    document.body.style.backgroundImage = `url(${d.bgImage})`;
-                } else if (d.bgColor) {
-                    document.body.classList.remove('custom-bg');
-                    document.body.style.background = d.bgColor;
+            // Müzik
+            const mp = document.getElementById('musicPlayer');
+            const audio = document.getElementById('bgMusic');
+            if (d.musicUrl) {
+                mp.classList.remove('hidden');
+                mp.style.background = `rgba(20,20,20,${d.musicOpacity != null ? d.musicOpacity : 0.9})`;
+                mp.style.backdropFilter = `blur(${d.musicBlur != null ? d.musicBlur : 10}px)`;
+                mp.style.webkitBackdropFilter = `blur(${d.musicBlur != null ? d.musicBlur : 10}px)`;
+                document.getElementById('musicTitle').textContent = d.musicTitle || 'Müzik';
+                document.getElementById('musicArtist').textContent = d.musicArtist || '';
+                document.getElementById('musicCover').src = d.musicCover || 'https://i.imgur.com/default.png';
+                audio.src = d.musicUrl;
+                audio.volume = 0.5;
+                if (d.musicAutoplay !== false) {
+                    audio.play().catch(() => {});
+                    document.getElementById('playBtn').textContent = '⏸';
+                    document.getElementById('musicCover').classList.add('playing');
                 } else {
-                    document.body.classList.remove('custom-bg');
-                    document.body.style.background = '#0a0a0a';
+                    document.getElementById('playBtn').textContent = '▶';
                 }
-                document.body.style.backgroundColor = d.bgColor || '#0a0a0a';
-
-                // Partiküller
-                const pc = document.getElementById('particles');
-                pc.innerHTML = '';
-                if (d.particles !== false) {
-                    const count = d.particleCount || 50;
-                    const color = d.particleColor || 'rgba(255,255,255,0.6)';
-                    for (let i = 0; i < count; i++) {
-                        const p = document.createElement('div');
-                        p.classList.add('particle');
-                        p.style.left = Math.random() * 100 + '%';
-                        p.style.animationDuration = (Math.random() * 10 + 5) + 's';
-                        p.style.animationDelay = Math.random() * 5 + 's';
-                        p.style.background = color;
-                        pc.appendChild(p);
-                    }
-                }
-
-                // Linkler
-                const lc = document.getElementById('linksContainer');
-                lc.innerHTML = '';
-                if (d.links && d.links.length > 0) {
-                    d.links.forEach(link => {
-                        const a = document.createElement('a');
-                        a.href = link.url;
-                        a.target = '_blank';
-                        a.className = 'link-btn';
-                        a.innerHTML = `<span class="link-icon">${link.icon || '🔗'}</span><span class="link-title">${link.title}</span><span class="link-arrow">→</span>`;
-                        lc.appendChild(a);
-                    });
-                } else {
-                    lc.innerHTML = '<div class="link-btn" style="justify-content:center;opacity:0.5;">Henüz link eklenmedi</div>';
-                }
-
-                // Müzik
-                const mp = document.getElementById('musicPlayer');
-                const audio = document.getElementById('bgMusic');
-                if (d.musicUrl) {
-                    mp.classList.remove('hidden');
-                    document.getElementById('musicTitle').textContent = d.musicTitle || 'Müzik';
-                    document.getElementById('musicArtist').textContent = d.musicArtist || 'Sanatçı';
-                    document.getElementById('musicCover').src = d.musicCover || 'https://i.imgur.com/default.png';
-                    audio.src = d.musicUrl;
-                    audio.volume = (d.musicVolume || 50) / 100;
-                    document.getElementById('volumeSlider').value = d.musicVolume || 50;
-                    if (d.musicAutoplay !== false) {
-                        audio.play().catch(() => {});
-                        document.getElementById('playBtn').textContent = '⏸';
-                        document.getElementById('musicCover').classList.add('playing');
-                    }
-                } else {
-                    mp.classList.add('hidden');
-                    audio.pause();
-                }
+            } else {
+                mp.classList.add('hidden');
+                audio.pause();
             }
         });
 
@@ -342,21 +291,14 @@
             const audio = document.getElementById('bgMusic');
             const btn = document.getElementById('playBtn');
             const cover = document.getElementById('musicCover');
-            if (audio.paused) {
-                audio.play();
+            if (audio.paused) { audio.play();
                 btn.textContent = '⏸';
-                cover.classList.add('playing');
-            } else {
-                audio.pause();
+                cover.classList.add('playing'); } else { audio.pause();
                 btn.textContent = '▶';
-                cover.classList.remove('playing');
-            }
-        }
-        function setVolume(v) {
-            document.getElementById('bgMusic').volume = v / 100;
+                cover.classList.remove('playing'); }
         }
 
-        // Görüntülenme sayacı
+        // Sayaç
         const viewRef = db.collection("bio").doc("views");
         viewRef.get().then((doc) => {
             let count = doc.exists ? (doc.data().count || 0) : 0;
