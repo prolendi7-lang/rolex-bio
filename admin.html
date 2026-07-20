@@ -107,7 +107,14 @@
                     <option value="glow">🌟 Dalgalanan Işık</option>
                     <option value="pulse">💫 Ritmik Nabız</option>
                     <option value="rainbow">🌈 Renkli Döngü</option>
+                    <option value="laser">🔴 Lazer Tarama</option>
+                    <option value="galaxy">🌌 Galaksi Dönüşü</option>
                 </select>
+                <div class="inline-group">
+                    <input type="range" id="ringSize" min="2" max="20" value="6" style="flex:1;" oninput="document.getElementById('rsv').textContent=this.value+'px'">
+                    <span id="rsv" style="font-size:12px;color:#666;min-width:40px;">6px</span>
+                </div>
+                <div class="range-label"><span>Halka Kalınlığı</span><span id="rsv-label">6px</span></div>
 
                 <h4>İsim Yanı Emojiler (3D efekti)</h4>
                 <div class="inline-group">
@@ -318,7 +325,7 @@
                 <button onclick="saveProfile()">💾 Kaydet</button>
                 <a href="index.html" target="_blank" class="preview-link">🔍 Bio Sayfasını Gör →</a>
             </div>
-            <p style="text-align:center;color:#333;font-size:11px;padding-bottom:30px;">Admin Panel v2.0</p>
+            <p style="text-align:center;color:#333;font-size:11px;padding-bottom:30px;">Admin Panel v2.1</p>
         </div>
     </div>
 
@@ -440,6 +447,9 @@
                 document.getElementById('bioSize').value = d.bioSize || 14;
                 document.getElementById('bsv').textContent = (d.bioSize || 14) + 'px';
                 document.getElementById('avatarEffect').value = d.avatarEffect || 'none';
+                document.getElementById('ringSize').value = d.ringSize || 6;
+                document.getElementById('rsv').textContent = (d.ringSize || 6) + 'px';
+                document.getElementById('rsv-label').textContent = (d.ringSize || 6) + 'px';
 
                 document.getElementById('statusIcon').value = d.statusIcon || '📍';
                 document.getElementById('statusText').value = d.statusText || '';
@@ -585,6 +595,7 @@
                 nameSize: parseInt(document.getElementById('nameSize').value),
                 bioSize: parseInt(document.getElementById('bioSize').value),
                 avatarEffect: document.getElementById('avatarEffect').value,
+                ringSize: parseInt(document.getElementById('ringSize').value),
                 statusIcon: document.getElementById('statusIcon').value || '📍',
                 statusText: document.getElementById('statusText').value,
                 statusColor: document.getElementById('statusColor').value,
@@ -660,7 +671,7 @@
         // Range güncellemeleri
         ['cardOpacity','cardBlur','particleCount','neonSize','musicOpacity','musicBlur',
          'btnGlowIntensity','bioGlowIntensity','statusGlowIntensity','viewGlowIntensity',
-         'bgOverlay','nameSize','bioSize','telegramGlowIntensity','telegramSize'
+         'bgOverlay','nameSize','bioSize','telegramGlowIntensity','telegramSize','ringSize'
         ].forEach(id => {
             const el = document.getElementById(id);
             if (el) {
@@ -671,12 +682,17 @@
                         'btnGlowIntensity':'giv','bioGlowIntensity':'bgiv',
                         'statusGlowIntensity':'sgiv','viewGlowIntensity':'vgiv',
                         'bgOverlay':'bov','nameSize':'nsv','bioSize':'bsv',
-                        'telegramGlowIntensity':'tgv','telegramSize':'tsv'
+                        'telegramGlowIntensity':'tgv','telegramSize':'tsv',
+                        'ringSize':'rsv'
                     };
                     const label = document.getElementById(labelMap[id]);
                     if (label) {
                         const val = this.value;
-                        label.textContent = id === 'telegramSize' || id === 'nameSize' || id === 'neonSize' ? val + 'px' : val + '%';
+                        const suffix = id === 'telegramSize' || id === 'nameSize' || id === 'neonSize' || id === 'ringSize' ? 'px' : '%';
+                        label.textContent = val + suffix;
+                        if (id === 'ringSize') {
+                            document.getElementById('rsv-label').textContent = val + 'px';
+                        }
                     }
                 });
             }
