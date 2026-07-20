@@ -53,13 +53,29 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* AVATAR WRAPPER - Tam Hizalama İçin */
         .avatar-wrapper {
-            position: relative; display: inline-block; margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            border-radius: 50%;
         }
+        
+        /* AVATAR RING - Tam Olarak Fotoğrafın Etrafında */
         .avatar-ring {
-            position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
-            border-radius: 50%; pointer-events: none; z-index: 0;
-            opacity: 0; transition: opacity 0.5s;
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
         .avatar-ring.active { opacity: 1; }
 
@@ -76,7 +92,7 @@
             75% { border-color: #ff4500; transform: scale(1.04) rotate(5deg); }
         }
 
-        /* Kıvılcım Patlaması - Işık saçan */
+        /* Kıvılcım Patlaması */
         .avatar-ring.sparkle {
             border: 2px dashed #fff;
             animation: sparkleRing 1.5s linear infinite;
@@ -90,7 +106,7 @@
             100% { transform: rotate(360deg) scale(1); }
         }
 
-        /* Neon Titreşim */
+        /* Neon Titreşim - RENKLİ VE HAREKETLİ */
         .avatar-ring.neon {
             border: 3px solid #00aaff;
             animation: neonPulse 1.2s ease-in-out infinite;
@@ -145,17 +161,60 @@
             100% { border-color: #ff0000; transform: rotate(360deg) scale(1); }
         }
 
+        /* Lazer Tarama - YENİ! */
+        .avatar-ring.laser {
+            border: 2px solid #ff0000;
+            animation: laserScan 1.5s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(255,0,0,0.3), 0 0 60px rgba(255,0,0,0.1);
+        }
+        @keyframes laserScan {
+            0%,100% { border-color: #ff0000; transform: scale(1) rotate(0deg); box-shadow: 0 0 20px rgba(255,0,0,0.3); }
+            25% { border-color: #00ff00; transform: scale(1.05) rotate(90deg); box-shadow: 0 0 40px rgba(0,255,0,0.4); }
+            50% { border-color: #0088ff; transform: scale(1) rotate(180deg); box-shadow: 0 0 20px rgba(0,136,255,0.3); }
+            75% { border-color: #ff00ff; transform: scale(1.05) rotate(270deg); box-shadow: 0 0 40px rgba(255,0,255,0.4); }
+        }
+
+        /* Galaksi Dönüşü - YENİ! */
+        .avatar-ring.galaxy {
+            border: 2px solid #8b00ff;
+            animation: galaxySpin 3s linear infinite;
+            box-shadow: 0 0 30px rgba(139,0,255,0.2), 0 0 60px rgba(139,0,255,0.1);
+            background: radial-gradient(circle at 30% 30%, rgba(139,0,255,0.15), transparent 60%);
+        }
+        @keyframes galaxySpin {
+            0% { transform: rotate(0deg) scale(1); border-color: #8b00ff; }
+            25% { transform: rotate(90deg) scale(1.04); border-color: #00bfff; }
+            50% { transform: rotate(180deg) scale(1); border-color: #ff69b4; }
+            75% { transform: rotate(270deg) scale(1.04); border-color: #00bfff; }
+            100% { transform: rotate(360deg) scale(1); border-color: #8b00ff; }
+        }
+
         .avatar {
-            width: 100px; height: 100px; border-radius: 50%;
-            border: 3px solid rgba(255,255,255,0.3); object-fit: cover;
-            transition: all 0.3s; position: relative; z-index: 1;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.3);
+            object-fit: cover;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
         }
         .avatar:hover { transform: scale(1.05); }
+
         .badge {
-            position: absolute; bottom: 5px; right: 5px;
-            color: white; width: 28px; height: 28px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px; border: 2px solid #0a0a0a; z-index: 2;
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border: 2px solid #0a0a0a;
+            z-index: 2;
             animation: pulse 2s infinite;
         }
         .badge.hidden { display: none; }
@@ -163,6 +222,7 @@
             0%,100% { box-shadow: 0 0 15px rgba(0,150,255,0.5); }
             50% { box-shadow: 0 0 30px rgba(0,150,255,0.8); }
         }
+
         .name-container { margin-bottom: 2px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .name-emoji { font-size: 26px; display: inline-block; transition: transform 0.3s; }
         .name-emoji.d3 {
@@ -219,7 +279,7 @@
         .link-icon { line-height: 1; }
         .no-links-text { opacity: 0.5; font-size: 13px; }
 
-        /* MÜZİK ÇALAR - MODERN TASARIM */
+        /* MÜZİK ÇALAR */
         .music-player {
             margin-top: 18px; border-radius: 16px; padding: 14px 18px;
             display: flex; align-items: center; gap: 14px;
@@ -288,7 +348,7 @@
             background: #ff4444; cursor: pointer; border: none;
         }
 
-        /* GÖRÜNTÜLENME SAYACI - SOL ALT */
+        /* GÖRÜNTÜLENME SAYACI - Sol Alt */
         .view-count {
             position: fixed; left: 20px; bottom: 20px;
             display: flex; align-items: center; gap: 6px;
@@ -311,7 +371,8 @@
         @media (max-width: 480px) {
             .profile-card { padding: 25px 18px 35px; }
             .name { font-size: 26px; }
-            .avatar { width: 85px; height: 85px; }
+            .avatar-wrapper, .avatar { width: 85px; height: 85px; }
+            .avatar-ring { top: -3px; left: -3px; right: -3px; bottom: -3px; }
             .music-player { padding: 12px 14px; }
             .music-controls button { width: 30px; height: 30px; font-size: 14px; }
             .music-controls button.play-btn { width: 34px; height: 34px; }
@@ -389,18 +450,7 @@
         let audio = document.getElementById('bgMusic');
         let playBtn = document.getElementById('musicPlayBtn');
         let seekBar = document.getElementById('musicSeek');
-        let prevBtn = document.getElementById('musicPrevBtn');
-        let nextBtn = document.getElementById('musicNextBtn');
         let isUserSeeking = false;
-        let currentMusicList = [];
-        let currentMusicIndex = 0;
-
-        // Seek bar
-        audio.addEventListener('timeupdate', () => {
-            if (!isUserSeeking && audio.duration) {
-                seekBar.value = (audio.currentTime / audio.duration) * 100;
-            }
-        });
 
         seekBar.addEventListener('input', () => {
             isUserSeeking = true;
@@ -412,7 +462,12 @@
             isUserSeeking = false;
         });
 
-        // Play/Pause
+        audio.addEventListener('timeupdate', () => {
+            if (!isUserSeeking && audio.duration) {
+                seekBar.value = (audio.currentTime / audio.duration) * 100;
+            }
+        });
+
         playBtn.addEventListener('click', () => {
             if (audio.paused) {
                 audio.play().catch(() => {});
@@ -434,7 +489,6 @@
         audio.addEventListener('ended', () => {
             document.getElementById('musicCover').classList.remove('playing');
             playBtn.textContent = '▶';
-            // Otomatik sonraki şarkıya geç (isteğe bağlı)
         });
 
         // Ana veri akışı
@@ -454,9 +508,12 @@
 
             document.getElementById('avatar').src = d.avatar || 'https://i.imgur.com/default.png';
 
-            // Avatar Efekti - GELİŞTİRİLMİŞ
+            // Avatar Efekti - TAM HİZALI
             const ring = document.getElementById('avatarRing');
             ring.className = 'avatar-ring';
+            const ringSize = d.ringSize || 6;
+            ring.style.borderWidth = ringSize + 'px';
+            
             if (d.avatarEffect && d.avatarEffect !== 'none') {
                 ring.classList.add('active', d.avatarEffect);
             }
@@ -597,14 +654,12 @@
                     if (btnGlow) a.classList.add('glow-border');
                     if (btnShimmer) a.classList.add('glow-active');
 
-                    // Telegram özel boyut ve parlaklık
                     if (link.brand === 'telegram') {
                         a.style.width = tgSize + 'px';
                         a.style.height = tgSize + 'px';
                         a.style.setProperty('--glow-color', `rgba(${tgColor},${tgIntensity * 0.6})`);
                         a.style.setProperty('--glow-color-soft', `rgba(${tgColor},${tgIntensity * 0.2})`);
                         a.style.setProperty('--glow-shimmer', `rgba(${tgColor},${tgIntensity * 0.5})`);
-                        // Telegram ikonunu büyüt
                         a.style.fontSize = (tgSize * 0.45) + 'px';
                     } else if (link.color) {
                         a.style.setProperty('--glow-color', `rgba(${link.color},0.5)`);
@@ -636,7 +691,7 @@
                 lc.innerHTML = '<p class="no-links-text">Henüz link eklenmedi</p>';
             }
 
-            // Müzik - GELİŞTİRİLMİŞ
+            // Müzik
             const mp = document.getElementById('musicPlayer');
             const cover = document.getElementById('musicCover');
             if (d.musicUrl) {
@@ -655,7 +710,6 @@
                     mp.style.border = '1px solid rgba(255,255,255,0.08)';
                 }
 
-                // Kapak ayarları
                 cover.className = 'music-cover';
                 if (d.musicSquare) {
                     cover.classList.add('square');
@@ -689,7 +743,7 @@
             }
         });
 
-        // Sayaç - Sol Alt
+        // Sayaç
         const viewRef = db.collection("bio").doc("views");
         viewRef.get().then((doc) => {
             let count = doc.exists ? (doc.data().count || 0) : 0;
