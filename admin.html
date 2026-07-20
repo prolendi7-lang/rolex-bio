@@ -48,6 +48,7 @@
         .tpl-btn:hover { background: #ff0000; border-color: #ff0000; color: #fff; }
         .preview-link { display: block; text-align: center; color: #ff4444; font-size: 13px; margin-top: 10px; text-decoration: none; }
         .hint { color: #666; font-size: 11px; margin: -4px 0 10px; }
+        .avatar-effect-select { width: 100%; padding: 10px; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; color: #fff; margin-bottom: 9px; }
     </style>
 </head>
 <body>
@@ -69,7 +70,15 @@
             <div class="card">
                 <h3>👤 Profil</h3>
                 <input type="text" id="nameInput" placeholder="İsim">
+                <div class="inline-group">
+                    <input type="range" id="nameSize" min="16" max="48" value="28" style="flex:1;" oninput="document.getElementById('nsv').textContent=this.value+'px'">
+                    <span id="nsv" style="font-size:12px;color:#666;min-width:40px;">28px</span>
+                </div>
                 <textarea id="bioInput" placeholder="Açıklama" rows="2"></textarea>
+                <div class="inline-group">
+                    <input type="range" id="bioSize" min="10" max="24" value="14" style="flex:1;" oninput="document.getElementById('bsv').textContent=this.value+'px'">
+                    <span id="bsv" style="font-size:12px;color:#666;min-width:40px;">14px</span>
+                </div>
                 <div class="inline-group">
                     <div style="flex:1;">
                         <span class="hint" style="margin:0 0 4px;display:block;">Yazı rengi</span>
@@ -85,6 +94,15 @@
                 <input type="hidden" id="bioColor" value="#aaaaaa">
                 <input type="hidden" id="bioGlowColor" value="255,255,255">
                 <input type="text" id="avatarInput" placeholder="Fotoğraf linki">
+
+                <h4>Profil Fotoğrafı Efekti</h4>
+                <select id="avatarEffect" class="avatar-effect-select">
+                    <option value="none">Yok</option>
+                    <option value="fire">🔥 Ateş Kıvılcım</option>
+                    <option value="sparkle">✨ Işık Halkası</option>
+                    <option value="neon">💡 Neon Işık</option>
+                    <option value="glow">🌟 Parlama</option>
+                </select>
 
                 <h4>İsim Yanı Emojiler (3D efekti)</h4>
                 <div class="inline-group">
@@ -143,7 +161,7 @@
 
                 <h4>Durum Satırı (📍 Telegram gibi, isteğe bağlı)</h4>
                 <div class="inline-group">
-                    <input type="text" id="statusIcon" placeholder="İkon (📍)" maxlength="4" style="flex:0 0 80px;">
+                    <input type="text" id="statusIcon" placeholder="İkon" maxlength="4" style="flex:0 0 80px;" value="📍">
                     <input type="text" id="statusText" placeholder="Metin (örn: Telegram, İstanbul)">
                 </div>
                 <div class="inline-group">
@@ -200,11 +218,18 @@
                     <span>Işık kayması (Shimmer)</span>
                     <input type="checkbox" id="btnShimmer" checked>
                 </div>
-                <h4>Parlama Rengi & Şiddeti</h4>
+                <h4>Parlama Rengi & Şiddeti (Tüm Butonlar)</h4>
                 <input type="color" id="btnGlowColorPicker" value="#ffffff" onchange="document.getElementById('btnGlowColor').value = hexToRgbStr(this.value)">
                 <input type="range" id="btnGlowIntensity" min="0" max="100" value="40" oninput="document.getElementById('giv').textContent=this.value+'%'">
                 <div class="range-label"><span>Parlama şiddeti (butonların yanlarından)</span><span id="giv">40%</span></div>
                 <input type="hidden" id="btnGlowColor" value="255,255,255">
+
+                <h4>Telegram Buton Özel Parlaklık</h4>
+                <div class="inline-group">
+                    <input type="text" id="telegramGlowColor" placeholder="Parlama rengi (örn: 0,136,204)" value="0,136,204">
+                    <input type="range" id="telegramGlowIntensity" min="0" max="200" value="60" oninput="document.getElementById('tgv').textContent=this.value+'%'">
+                    <span id="tgv" style="font-size:12px;color:#666;min-width:40px;">60%</span>
+                </div>
 
                 <h4>Buton Renkleri</h4>
                 <div class="inline-group">
@@ -223,6 +248,9 @@
                 <h3>🎨 Arka Plan</h3>
                 <input type="text" id="bgColor" placeholder="Renk / Gradient">
                 <input type="text" id="bgImage" placeholder="Resim linki">
+                <h4>Gece Modu (Karartma)</h4>
+                <input type="range" id="bgOverlay" min="0" max="90" value="0" oninput="document.getElementById('bov').textContent=this.value+'%'">
+                <div class="range-label"><span>Karartma Oranı</span><span id="bov">0%</span></div>
                 <h4>Partiküller</h4>
                 <div class="toggle-row">
                     <span>Aktif</span>
@@ -247,7 +275,6 @@
                     <span>Otomatik çal</span>
                     <input type="checkbox" id="musicAutoplay" checked>
                 </div>
-                <p class="hint">Manuel çal/durdur tuşu kaldırıldı, müzik sadece otomatik çalar.</p>
                 <h4>Müzik Kartı Saydamlık</h4>
                 <input type="range" id="musicOpacity" min="0" max="100" value="90" oninput="document.getElementById('mov').textContent=this.value+'%'">
                 <div class="range-label"><span>Saydamlık (0 = tamamen görünmez)</span><span id="mov">90%</span></div>
@@ -395,6 +422,13 @@
                 document.getElementById('neonSize').value = d.neonSize || 10;
                 document.getElementById('ns').textContent = (d.neonSize || 10) + 'px';
 
+                // Yeni alanlar
+                document.getElementById('nameSize').value = d.nameSize || 28;
+                document.getElementById('nsv').textContent = (d.nameSize || 28) + 'px';
+                document.getElementById('bioSize').value = d.bioSize || 14;
+                document.getElementById('bsv').textContent = (d.bioSize || 14) + 'px';
+                document.getElementById('avatarEffect').value = d.avatarEffect || 'none';
+
                 document.getElementById('statusIcon').value = d.statusIcon || '📍';
                 document.getElementById('statusText').value = d.statusText || '';
                 document.getElementById('statusColor').value = d.statusColor || '#bbbbbb';
@@ -419,6 +453,8 @@
 
                 document.getElementById('bgColor').value = d.bgColor || '';
                 document.getElementById('bgImage').value = d.bgImage || '';
+                document.getElementById('bgOverlay').value = d.bgOverlay || 0;
+                document.getElementById('bov').textContent = (d.bgOverlay || 0) + '%';
                 document.getElementById('particlesToggle').checked = d.particles !== false;
                 document.getElementById('particleColor').value = d.particleColor || '';
                 document.getElementById('particleCount').value = d.particleCount || 40;
@@ -434,6 +470,10 @@
                 document.getElementById('btnGlowColorPicker').value = rgbStrToHex(d.btnGlowColor || '255,255,255');
                 document.getElementById('btnGlowIntensity').value = d.btnGlowIntensity !== undefined ? d.btnGlowIntensity : 40;
                 document.getElementById('giv').textContent = (d.btnGlowIntensity !== undefined ? d.btnGlowIntensity : 40) + '%';
+
+                document.getElementById('telegramGlowColor').value = d.telegramGlowColor || '0,136,204';
+                document.getElementById('telegramGlowIntensity').value = d.telegramGlowIntensity || 60;
+                document.getElementById('tgv').textContent = (d.telegramGlowIntensity || 60) + '%';
 
                 document.getElementById('musicUrl').value = d.musicUrl || '';
                 document.getElementById('musicTitleInput').value = d.musicTitle || '';
@@ -497,7 +537,9 @@
                 btnHoverColor: document.getElementById('btnHoverColor').value,
                 btnHoverBorder: document.getElementById('btnHoverBorder').value,
                 btnGlowColor: document.getElementById('btnGlowColor').value,
-                btnGlowIntensity: parseInt(document.getElementById('btnGlowIntensity').value)
+                btnGlowIntensity: parseInt(document.getElementById('btnGlowIntensity').value),
+                telegramGlowColor: document.getElementById('telegramGlowColor').value,
+                telegramGlowIntensity: parseInt(document.getElementById('telegramGlowIntensity').value)
             }, { merge: true }).then(() => msg('Kaydedildi!', 'success')).catch(err => { console.error(err); msg('Hata: ' + err.message, 'error'); });
         }
 
@@ -523,6 +565,9 @@
                 neonColor: ef.neonColor,
                 neonSize: parseInt(document.getElementById('neonSize').value),
                 nameFont: ef.font || '',
+                nameSize: parseInt(document.getElementById('nameSize').value),
+                bioSize: parseInt(document.getElementById('bioSize').value),
+                avatarEffect: document.getElementById('avatarEffect').value,
                 statusIcon: document.getElementById('statusIcon').value || '📍',
                 statusText: document.getElementById('statusText').value,
                 statusColor: document.getElementById('statusColor').value,
@@ -546,6 +591,7 @@
             db.collection("bio").doc("profile").set({
                 bgColor: document.getElementById('bgColor').value,
                 bgImage: document.getElementById('bgImage').value,
+                bgOverlay: parseInt(document.getElementById('bgOverlay').value),
                 particles: document.getElementById('particlesToggle').checked,
                 particleColor: document.getElementById('particleColor').value,
                 particleCount: parseInt(document.getElementById('particleCount').value)
@@ -612,6 +658,14 @@
         document.getElementById('statusGlowIntensity').addEventListener('input', function() { document.getElementById('sgiv')
                 .textContent = this.value + '%'; });
         document.getElementById('viewGlowIntensity').addEventListener('input', function() { document.getElementById('vgiv')
+                .textContent = this.value + '%'; });
+        document.getElementById('bgOverlay').addEventListener('input', function() { document.getElementById('bov')
+                .textContent = this.value + '%'; });
+        document.getElementById('nameSize').addEventListener('input', function() { document.getElementById('nsv')
+                .textContent = this.value + 'px'; });
+        document.getElementById('bioSize').addEventListener('input', function() { document.getElementById('bsv')
+                .textContent = this.value + 'px'; });
+        document.getElementById('telegramGlowIntensity').addEventListener('input', function() { document.getElementById('tgv')
                 .textContent = this.value + '%'; });
     </script>
 </body>
