@@ -54,7 +54,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* AVATAR WRAPPER - Tam Hizalama İçin */
         .avatar-wrapper {
             position: relative;
             display: inline-block;
@@ -64,7 +63,6 @@
             border-radius: 50%;
         }
         
-        /* AVATAR RING - Tam Olarak Fotoğrafın Etrafında */
         .avatar-ring {
             position: absolute;
             top: -4px;
@@ -79,7 +77,6 @@
         }
         .avatar-ring.active { opacity: 1; }
 
-        /* Ateş Halkası - Dönen ve titreşen */
         .avatar-ring.fire {
             border: 3px solid transparent;
             animation: fireRing 0.8s ease-in-out infinite;
@@ -92,7 +89,6 @@
             75% { border-color: #ff4500; transform: scale(1.04) rotate(5deg); }
         }
 
-        /* Kıvılcım Patlaması */
         .avatar-ring.sparkle {
             border: 2px dashed #fff;
             animation: sparkleRing 1.5s linear infinite;
@@ -106,7 +102,6 @@
             100% { transform: rotate(360deg) scale(1); }
         }
 
-        /* Neon Titreşim - RENKLİ VE HAREKETLİ */
         .avatar-ring.neon {
             border: 3px solid #00aaff;
             animation: neonPulse 1.2s ease-in-out infinite;
@@ -119,7 +114,6 @@
             75% { border-color: #ff00ff; box-shadow: 0 0 30px #ff00ff, 0 0 60px #ff00ff33; transform: scale(1.03); }
         }
 
-        /* Dalgalanan Işık */
         .avatar-ring.glow {
             border: 2px solid rgba(255,255,255,0.3);
             animation: glowWave 2s ease-in-out infinite;
@@ -132,7 +126,6 @@
             75% { border-color: rgba(100,255,100,0.5); box-shadow: 0 0 40px rgba(100,255,100,0.2); transform: scale(1.02); }
         }
 
-        /* Ritmik Nabız */
         .avatar-ring.pulse {
             border: 3px solid #ff0080;
             animation: pulseBeat 1s ease-in-out infinite;
@@ -145,7 +138,6 @@
             75% { transform: scale(1.08); border-color: #ff4400; box-shadow: 0 0 50px rgba(255,68,0,0.5); }
         }
 
-        /* Renkli Döngü */
         .avatar-ring.rainbow {
             border: 3px solid transparent;
             animation: rainbowRing 2s linear infinite;
@@ -161,7 +153,6 @@
             100% { border-color: #ff0000; transform: rotate(360deg) scale(1); }
         }
 
-        /* Lazer Tarama - YENİ! */
         .avatar-ring.laser {
             border: 2px solid #ff0000;
             animation: laserScan 1.5s ease-in-out infinite;
@@ -174,7 +165,6 @@
             75% { border-color: #ff00ff; transform: scale(1.05) rotate(270deg); box-shadow: 0 0 40px rgba(255,0,255,0.4); }
         }
 
-        /* Galaksi Dönüşü - YENİ! */
         .avatar-ring.galaxy {
             border: 2px solid #8b00ff;
             animation: galaxySpin 3s linear infinite;
@@ -279,7 +269,7 @@
         .link-icon { line-height: 1; }
         .no-links-text { opacity: 0.5; font-size: 13px; }
 
-        /* MÜZİK ÇALAR */
+        /* MÜZİK ÇALAR - MODERN 3D BUTONLAR */
         .music-player {
             margin-top: 18px; border-radius: 16px; padding: 14px 18px;
             display: flex; align-items: center; gap: 14px;
@@ -309,30 +299,71 @@
         .music-artist { font-size: 11px; color: #888; }
 
         .music-controls {
-            display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+            display: flex; align-items: center; gap: 4px; flex-shrink: 0;
             background: rgba(255,255,255,0.04);
-            padding: 4px 8px; border-radius: 30px;
+            padding: 4px 6px; border-radius: 30px;
             border: 1px solid rgba(255,255,255,0.06);
         }
         .music-controls button {
-            background: transparent; border: none; border-radius: 50%;
-            width: 34px; height: 34px; color: white; font-size: 16px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+            position: relative;
+            padding: 0;
+        }
+        .music-controls button svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
             transition: all 0.25s;
         }
         .music-controls button:hover {
-            background: rgba(255,255,255,0.12);
-            transform: scale(1.08);
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-2px) scale(1.05);
+            color: #fff;
+        }
+        .music-controls button:active {
+            transform: scale(0.92);
         }
         .music-controls button.play-btn {
-            background: rgba(255,68,68,0.2);
+            background: rgba(255,68,68,0.15);
             color: #ff4444;
-            width: 38px; height: 38px;
+            width: 42px;
+            height: 42px;
+            box-shadow: 0 0 20px rgba(255,68,68,0.1);
+        }
+        .music-controls button.play-btn svg {
+            width: 22px;
+            height: 22px;
         }
         .music-controls button.play-btn:hover {
-            background: rgba(255,68,68,0.35);
-            transform: scale(1.12);
+            background: rgba(255,68,68,0.3);
+            box-shadow: 0 0 30px rgba(255,68,68,0.2);
+            color: #ff6666;
         }
+        .music-controls button.play-btn.playing {
+            background: rgba(68,255,68,0.15);
+            color: #44ff44;
+            box-shadow: 0 0 20px rgba(68,255,68,0.1);
+        }
+        .music-controls button.play-btn.playing:hover {
+            background: rgba(68,255,68,0.3);
+            box-shadow: 0 0 30px rgba(68,255,68,0.2);
+            color: #66ff66;
+        }
+
         .music-seek {
             flex: 1; min-width: 60px; height: 3px; -webkit-appearance: none;
             background: rgba(255,255,255,0.15); border-radius: 4px; outline: none;
@@ -348,7 +379,7 @@
             background: #ff4444; cursor: pointer; border: none;
         }
 
-        /* GÖRÜNTÜLENME SAYACI - Sol Alt */
+        /* GÖRÜNTÜLENME SAYACI */
         .view-count {
             position: fixed; left: 20px; bottom: 20px;
             display: flex; align-items: center; gap: 6px;
@@ -374,8 +405,10 @@
             .avatar-wrapper, .avatar { width: 85px; height: 85px; }
             .avatar-ring { top: -3px; left: -3px; right: -3px; bottom: -3px; }
             .music-player { padding: 12px 14px; }
-            .music-controls button { width: 30px; height: 30px; font-size: 14px; }
-            .music-controls button.play-btn { width: 34px; height: 34px; }
+            .music-controls button { width: 30px; height: 30px; }
+            .music-controls button svg { width: 16px; height: 16px; }
+            .music-controls button.play-btn { width: 36px; height: 36px; }
+            .music-controls button.play-btn svg { width: 18px; height: 18px; }
             .view-count { left: 12px; bottom: 12px; font-size: 11px; padding: 6px 12px; }
         }
     </style>
@@ -411,15 +444,21 @@
                 <div class="music-artist" id="musicArtist">Sanatçı</div>
             </div>
             <div class="music-controls">
-                <button id="musicPrevBtn" title="Önceki">⏮</button>
-                <button class="play-btn" id="musicPlayBtn" title="Çal/Durdur">▶</button>
-                <button id="musicNextBtn" title="Sonraki">⏭</button>
+                <button id="musicPrevBtn" title="Önceki">
+                    <svg viewBox="0 0 24 24"><polygon points="19,20 9,12 19,4"/><rect x="5" y="4" width="2" height="16"/></svg>
+                </button>
+                <button class="play-btn" id="musicPlayBtn" title="Çal/Durdur">
+                    <svg viewBox="0 0 24 24" id="playIcon"><polygon points="5,3 19,12 5,21"/></svg>
+                </button>
+                <button id="musicNextBtn" title="Sonraki">
+                    <svg viewBox="0 0 24 24"><polygon points="5,4 15,12 5,20"/><rect x="17" y="4" width="2" height="16"/></svg>
+                </button>
             </div>
             <input type="range" class="music-seek" id="musicSeek" min="0" max="100" value="0">
         </div>
     </div>
 
-    <!-- Görüntülenme Sayacı - Sol Alt -->
+    <!-- Görüntülenme Sayacı -->
     <div class="view-count" id="viewCountWrap">
         <span class="eye-3d">👁</span>
         <span id="viewCount">0</span>
@@ -449,8 +488,20 @@
         // Müzik kontrolleri
         let audio = document.getElementById('bgMusic');
         let playBtn = document.getElementById('musicPlayBtn');
+        let playIcon = document.getElementById('playIcon');
         let seekBar = document.getElementById('musicSeek');
         let isUserSeeking = false;
+
+        // Play/Pause ikon değiştirme
+        function updatePlayIcon(isPlaying) {
+            if (isPlaying) {
+                playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+                playBtn.classList.add('playing');
+            } else {
+                playIcon.innerHTML = '<polygon points="5,3 19,12 5,21"/>';
+                playBtn.classList.remove('playing');
+            }
+        }
 
         seekBar.addEventListener('input', () => {
             isUserSeeking = true;
@@ -471,24 +522,33 @@
         playBtn.addEventListener('click', () => {
             if (audio.paused) {
                 audio.play().catch(() => {});
-                playBtn.textContent = '⏸';
+                updatePlayIcon(true);
             } else {
                 audio.pause();
-                playBtn.textContent = '▶';
+                updatePlayIcon(false);
             }
         });
 
         audio.addEventListener('play', () => {
-            playBtn.textContent = '⏸';
+            updatePlayIcon(true);
             document.getElementById('musicCover').classList.add('playing');
         });
         audio.addEventListener('pause', () => {
-            playBtn.textContent = '▶';
+            updatePlayIcon(false);
             document.getElementById('musicCover').classList.remove('playing');
         });
         audio.addEventListener('ended', () => {
+            updatePlayIcon(false);
             document.getElementById('musicCover').classList.remove('playing');
-            playBtn.textContent = '▶';
+            seekBar.value = 0;
+        });
+
+        // Prev/Next butonları (şimdilik çalışmıyor, ileride playlist eklenecek)
+        document.getElementById('musicPrevBtn').addEventListener('click', () => {
+            audio.currentTime = 0;
+        });
+        document.getElementById('musicNextBtn').addEventListener('click', () => {
+            // İleride playlist desteği
         });
 
         // Ana veri akışı
@@ -496,7 +556,6 @@
             if (!doc.exists) return;
             const d = doc.data();
 
-            // İsim
             document.getElementById('nameDisplay').textContent = d.name || 'İsimsiz';
             document.getElementById('nameDisplay').style.fontSize = (d.nameSize || 32) + 'px';
 
@@ -508,7 +567,6 @@
 
             document.getElementById('avatar').src = d.avatar || 'https://i.imgur.com/default.png';
 
-            // Avatar Efekti - TAM HİZALI
             const ring = document.getElementById('avatarRing');
             ring.className = 'avatar-ring';
             const ringSize = d.ringSize || 6;
@@ -518,7 +576,6 @@
                 ring.classList.add('active', d.avatarEffect);
             }
 
-            // Emojiler
             const el = document.getElementById('nameEmojiLeft');
             const er = document.getElementById('nameEmojiRight');
             const nameBadgeOn = d.nameBadge === true;
@@ -544,14 +601,12 @@
 
             document.title = (d.name || 'Bio') + ' | Bio';
 
-            // Rozet
             const badge = document.getElementById('badge');
             if (d.showBadge === false) badge.classList.add('hidden');
             else { badge.classList.remove('hidden');
                 badge.textContent = d.badgeIcon || '✓';
                 badge.style.background = d.badgeColor || 'linear-gradient(135deg, #1da1f2, #0d8bd9)'; }
 
-            // Kart saydamlık
             const cardOpacity = (d.cardOpacity !== undefined && d.cardOpacity !== null) ? d.cardOpacity : 0.88;
             const cardBlur = (d.cardBlur !== undefined && d.cardBlur !== null) ? d.cardBlur : 20;
             const card = document.getElementById('profileCard');
@@ -567,12 +622,10 @@
                 card.style.border = '1px solid rgba(255,255,255,0.1)';
             }
 
-            // Gece Modu
             const overlay = document.getElementById('bgOverlay');
             const overlayVal = (d.bgOverlay !== undefined && d.bgOverlay !== null) ? d.bgOverlay : 0;
             overlay.style.background = `rgba(0,0,0,${overlayVal / 100})`;
 
-            // İsim efekti
             const nameEl = document.getElementById('nameDisplay');
             nameEl.style.background = d.nameGradient || 'linear-gradient(135deg, #ffffff, #cccccc)';
             nameEl.style.webkitBackgroundClip = 'text';
@@ -582,7 +635,6 @@
             nameEl.style.filter = d.nameNeon ? `drop-shadow(0 0 ${d.neonSize || 15}px ${d.neonColor || '#fff'})` : 'none';
             nameEl.style.fontFamily = d.nameFont || "'Segoe UI', system-ui, -apple-system, sans-serif";
 
-            // Durum satırı
             const statusLine = document.getElementById('statusLine');
             if (d.statusText) {
                 statusLine.classList.remove('hidden');
@@ -600,28 +652,23 @@
                 statusLine.classList.add('hidden');
             }
 
-            // Arka plan
             document.body.style.background = d.bgImage ? `url(${d.bgImage}) center/cover no-repeat fixed` : (d.bgColor || '#0a0a0a');
             document.body.style.backgroundColor = d.bgColor || '#0a0a0a';
 
-            // Buton parlama
             const gi = (d.btnGlowIntensity !== undefined && d.btnGlowIntensity !== null ? d.btnGlowIntensity : 50) / 100;
             const gc = d.btnGlowColor || '255,255,255';
             document.documentElement.style.setProperty('--glow-color', `rgba(${gc},${(0.4 * gi).toFixed(2)})`);
             document.documentElement.style.setProperty('--glow-color-soft', `rgba(${gc},${(0.12 * gi).toFixed(2)})`);
             document.documentElement.style.setProperty('--glow-shimmer', `rgba(${gc},${(0.3 * gi).toFixed(2)})`);
 
-            // Telegram özel
             const tgColor = d.telegramGlowColor || '0,136,204';
             const tgIntensity = (d.telegramGlowIntensity || 80) / 100;
             const tgSize = d.telegramSize || 54;
 
-            // Görüntülenme sayacı
             const viewCountWrap = document.getElementById('viewCountWrap');
             viewCountWrap.style.color = d.viewColor || '#999999';
             viewCountWrap.style.textShadow = glowShadow(d.viewGlowColor, d.viewGlowIntensity);
 
-            // Partikül
             const pc = document.getElementById('particles');
             pc.innerHTML = '';
             if (d.particles !== false) {
@@ -638,7 +685,6 @@
                 }
             }
 
-            // Linkler
             const lc = document.getElementById('linksContainer');
             lc.innerHTML = '';
             const btnGlow = d.btnGlow !== false;
@@ -691,7 +737,6 @@
                 lc.innerHTML = '<p class="no-links-text">Henüz link eklenmedi</p>';
             }
 
-            // Müzik
             const mp = document.getElementById('musicPlayer');
             const cover = document.getElementById('musicCover');
             if (d.musicUrl) {
@@ -729,21 +774,21 @@
                     audio.load();
                     if (d.musicAutoplay !== false) {
                         audio.play().catch(() => {
-                            playBtn.textContent = '▶';
+                            updatePlayIcon(false);
                         });
                     } else {
                         audio.pause();
-                        playBtn.textContent = '▶';
+                        updatePlayIcon(false);
                     }
                 }
             } else {
                 mp.classList.add('hidden');
                 audio.pause();
                 audio.src = '';
+                updatePlayIcon(false);
             }
         });
 
-        // Sayaç
         const viewRef = db.collection("bio").doc("views");
         viewRef.get().then((doc) => {
             let count = doc.exists ? (doc.data().count || 0) : 0;
