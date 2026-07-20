@@ -17,7 +17,7 @@
             --glow-shimmer: rgba(255,255,255,0.15);
         }
         
-        /* ============ GİRİŞ EKRANI ============ */
+        /* ============ GİRİŞ EKRANI - SADE ============ */
         #splashScreen {
             position: fixed;
             top: 0;
@@ -130,14 +130,13 @@
             98% { opacity: 0.5; transform: scaleY(0.8); }
         }
         
-        /* Yıldırım Patlaması (Büyük Flaş) */
         .flash-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.15), transparent 70%);
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 70%);
             pointer-events: none;
             opacity: 0;
             animation: flashPulse 4s ease-in-out infinite;
@@ -146,11 +145,11 @@
             0%, 90%, 100% { opacity: 0; }
             92% { opacity: 1; }
             94% { opacity: 0; }
-            96% { opacity: 0.6; }
+            96% { opacity: 0.5; }
             98% { opacity: 0; }
         }
         
-        /* Giriş Ekranı İçerik */
+        /* Giriş Ekranı İçerik - SADE */
         .splash-content {
             position: relative;
             z-index: 1;
@@ -158,105 +157,67 @@
             animation: fadeInSplash 1.5s ease;
         }
         @keyframes fadeInSplash {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
         .splash-logo {
-            font-size: 72px;
+            font-size: 56px;
             font-weight: 900;
-            background: linear-gradient(135deg, #ffd700, #ff6b00, #ffd700);
+            background: linear-gradient(135deg, #ffd700, #ff6b00);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 60px rgba(255,215,0,0.3);
+            text-shadow: 0 0 60px rgba(255,215,0,0.2);
             letter-spacing: 4px;
-            margin-bottom: 10px;
             font-family: 'Bungee', cursive;
+            margin-bottom: 5px;
         }
         .splash-logo small {
-            font-size: 24px;
+            font-size: 14px;
             display: block;
-            background: linear-gradient(135deg, #ff4444, #ff8800);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 8px;
-            margin-top: -5px;
-        }
-        
-        .splash-sub {
-            font-size: 16px;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.3);
+            -webkit-text-fill-color: rgba(255,255,255,0.3);
             letter-spacing: 6px;
-            text-transform: uppercase;
-            margin-bottom: 30px;
+            margin-top: 2px;
             font-weight: 300;
-        }
-        
-        .splash-divider {
-            width: 80px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ff4444, transparent);
-            margin: 15px auto;
-            border-radius: 2px;
         }
         
         .splash-click {
             display: inline-block;
-            padding: 16px 48px;
-            border: 2px solid rgba(255,68,68,0.4);
-            border-radius: 50px;
-            color: #fff;
-            font-size: 18px;
-            font-weight: 700;
+            padding: 12px 32px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            font-weight: 400;
             letter-spacing: 3px;
             text-transform: uppercase;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            background: rgba(255,68,68,0.1);
+            transition: all 0.4s ease;
+            background: rgba(255,255,255,0.03);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
+            margin-top: 15px;
         }
         .splash-click:hover {
-            transform: scale(1.05);
-            border-color: #ff4444;
-            background: rgba(255,68,68,0.2);
-            box-shadow: 0 0 40px rgba(255,68,68,0.2);
+            transform: scale(1.03);
+            border-color: rgba(255,255,255,0.25);
+            color: #fff;
+            background: rgba(255,255,255,0.06);
         }
         .splash-click:active {
             transform: scale(0.95);
         }
-        .splash-click .shine {
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
-            transform: rotate(45deg);
-            animation: shineMove 3s linear infinite;
-        }
-        @keyframes shineMove {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
-        }
         
-        /* Alt Bilgi */
-        .splash-footer {
-            position: absolute;
-            bottom: 40px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            z-index: 1;
-            font-size: 12px;
-            color: rgba(255,255,255,0.2);
-            letter-spacing: 2px;
+        .splash-sub {
+            font-size: 11px;
+            color: rgba(255,255,255,0.15);
+            letter-spacing: 4px;
+            margin-top: 20px;
+            font-weight: 300;
         }
-        
+
         /* ============ ANA SAYFA ============ */
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -285,7 +246,7 @@
         .container { position: relative; z-index: 1; max-width: 520px; width: 100%; text-align: center; }
         .profile-card {
             position: relative;
-            border-radius: 24px; padding: 35px 25px 45px;
+            border-radius: 24px; padding: 30px 25px 45px;
             border: 1px solid rgba(255,255,255,0.1);
             animation: fadeInUp 0.8s ease;
             background: rgba(20,20,20,0.88);
@@ -296,12 +257,13 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
+        /* AVATAR - Gri yuvarlak kaldırıldı, aşağı kaydırıldı */
         .avatar-wrapper {
             position: relative;
             display: inline-block;
             width: 100px;
             height: 100px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             border-radius: 50%;
         }
         
@@ -330,7 +292,6 @@
             50% { border-color: #ffd700; transform: scale(1.08) rotate(-5deg); }
             75% { border-color: #ff4500; transform: scale(1.04) rotate(5deg); }
         }
-
         .avatar-ring.sparkle {
             border: 2px dashed #fff;
             animation: sparkleRing 1.5s linear infinite;
@@ -343,7 +304,6 @@
             75% { transform: rotate(270deg) scale(1.06); box-shadow: 0 0 40px rgba(255,215,0,0.3); }
             100% { transform: rotate(360deg) scale(1); }
         }
-
         .avatar-ring.neon {
             border: 3px solid #00aaff;
             animation: neonPulse 1.2s ease-in-out infinite;
@@ -355,7 +315,6 @@
             50% { border-color: #00ffaa; box-shadow: 0 0 20px #00ffaa, 0 0 40px #00ffaa33; transform: scale(1); }
             75% { border-color: #ff00ff; box-shadow: 0 0 30px #ff00ff, 0 0 60px #ff00ff33; transform: scale(1.03); }
         }
-
         .avatar-ring.glow {
             border: 2px solid rgba(255,255,255,0.3);
             animation: glowWave 2s ease-in-out infinite;
@@ -367,7 +326,6 @@
             50% { border-color: rgba(100,100,255,0.5); box-shadow: 0 0 40px rgba(100,100,255,0.2); transform: scale(1); }
             75% { border-color: rgba(100,255,100,0.5); box-shadow: 0 0 40px rgba(100,255,100,0.2); transform: scale(1.02); }
         }
-
         .avatar-ring.pulse {
             border: 3px solid #ff0080;
             animation: pulseBeat 1s ease-in-out infinite;
@@ -379,7 +337,6 @@
             50% { transform: scale(1); border-color: #ff0080; box-shadow: 0 0 20px rgba(255,0,128,0.3); }
             75% { transform: scale(1.08); border-color: #ff4400; box-shadow: 0 0 50px rgba(255,68,0,0.5); }
         }
-
         .avatar-ring.rainbow {
             border: 3px solid transparent;
             animation: rainbowRing 2s linear infinite;
@@ -394,7 +351,6 @@
             83% { border-color: #8800ff; transform: rotate(300deg) scale(1.04); }
             100% { border-color: #ff0000; transform: rotate(360deg) scale(1); }
         }
-
         .avatar-ring.laser {
             border: 2px solid #ff0000;
             animation: laserScan 1.5s ease-in-out infinite;
@@ -406,7 +362,6 @@
             50% { border-color: #0088ff; transform: scale(1) rotate(180deg); box-shadow: 0 0 20px rgba(0,136,255,0.3); }
             75% { border-color: #ff00ff; transform: scale(1.05) rotate(270deg); box-shadow: 0 0 40px rgba(255,0,255,0.4); }
         }
-
         .avatar-ring.galaxy {
             border: 2px solid #8b00ff;
             animation: galaxySpin 3s linear infinite;
@@ -425,7 +380,7 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            border: 3px solid rgba(255,255,255,0.3);
+            border: none; /* Gri yuvarlak kaldırıldı */
             object-fit: cover;
             transition: all 0.3s;
             position: relative;
@@ -455,7 +410,15 @@
             50% { box-shadow: 0 0 30px rgba(0,150,255,0.8); }
         }
 
-        .name-container { margin-bottom: 2px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .name-container { 
+            margin-bottom: 2px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+            margin-top: 2px; /* Fotoğrafa yaklaştır */
+        }
         .name-emoji { font-size: 26px; display: inline-block; transition: transform 0.3s; }
         .name-emoji.d3 {
             text-shadow: 1px 1px 0 rgba(0,0,0,0.2), 2px 2px 0 rgba(0,0,0,0.25), 3px 3px 4px rgba(0,0,0,0.35);
@@ -487,27 +450,71 @@
             width: 18px; height: 18px; display: inline-block;
             filter: drop-shadow(0 0 4px rgba(255,255,255,0.3));
         }
-        .links { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 16px; }
-        .link-btn {
-            display: flex; align-items: center; justify-content: center;
-            width: 54px; height: 54px; border-radius: 50%;
-            color: white; text-decoration: none;
-            font-size: 22px; transition: all 0.3s;
-            position: relative;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.15);
+        
+        /* LİNKLER - Telegram özel */
+        .links { 
+            display: flex; 
+            flex-direction: row; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 20px; 
         }
-        .link-btn:hover { transform: translateY(-3px) scale(1.08); }
+        .link-btn {
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            width: 54px; 
+            height: 54px; 
+            border-radius: 50%;
+            color: white; 
+            text-decoration: none;
+            font-size: 22px; 
+            transition: all 0.3s;
+            position: relative;
+            background: transparent; /* Arka plan kaldırıldı */
+            border: none; /* Kenarlık kaldırıldı */
+        }
+        .link-btn:hover { 
+            transform: translateY(-3px) scale(1.1); 
+        }
+        
+        /* Telegram özel - Büyük ve sade */
+        .link-btn.telegram-link {
+            width: 72px;
+            height: 72px;
+            font-size: 44px;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: #ffffff;
+            filter: drop-shadow(0 0 20px rgba(0,136,204,0.3));
+            transition: all 0.3s ease;
+        }
+        .link-btn.telegram-link:hover {
+            transform: translateY(-3px) scale(1.08);
+            filter: drop-shadow(0 0 40px rgba(0,136,204,0.5));
+        }
+        .link-btn.telegram-link i {
+            font-size: 48px;
+        }
+
+        /* Diğer linkler için arka plan ve kenarlık yok */
+        .link-btn:not(.telegram-link) {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .link-btn:not(.telegram-link):hover {
+            transform: translateY(-3px) scale(1.08);
+        }
+
         .link-btn.glow-border {
-            box-shadow: 0 0 12px var(--glow-color), 0 0 24px var(--glow-color-soft);
+            box-shadow: none !important;
         }
         .link-btn.glow-active {
-            animation: iconPulse 2.6s ease-in-out infinite;
+            animation: none !important;
         }
-        @keyframes iconPulse {
-            0%, 100% { box-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color-soft); }
-            50% { box-shadow: 0 0 20px var(--glow-shimmer), 0 0 34px var(--glow-color); }
-        }
+        
         .link-icon { line-height: 1; }
         .no-links-text { opacity: 0.5; font-size: 13px; }
 
@@ -620,7 +627,6 @@
             background: #ff4444; cursor: pointer; border: none;
         }
 
-        /* GÖRÜNTÜLENME SAYACI */
         .view-count {
             position: fixed; left: 20px; bottom: 20px;
             display: flex; align-items: center; gap: 6px;
@@ -651,16 +657,22 @@
             .music-controls button.play-btn { width: 36px; height: 36px; }
             .music-controls button.play-btn svg { width: 18px; height: 18px; }
             .view-count { left: 12px; bottom: 12px; font-size: 11px; padding: 6px 12px; }
-            .splash-logo { font-size: 48px; }
-            .splash-logo small { font-size: 18px; }
-            .splash-click { padding: 14px 32px; font-size: 15px; }
+            .splash-logo { font-size: 38px; }
+            .splash-click { padding: 10px 24px; font-size: 11px; }
+            .link-btn.telegram-link {
+                width: 60px;
+                height: 60px;
+                font-size: 36px;
+            }
+            .link-btn.telegram-link i {
+                font-size: 40px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- ============ GİRİŞ EKRANI ============ -->
+    <!-- ============ GİRİŞ EKRANI - SADE ============ -->
     <div id="splashScreen" onclick="enterSite()">
-        <!-- Yıldırım Efektleri -->
         <div class="lightning-container">
             <div class="lightning"></div>
             <div class="lightning"></div>
@@ -676,19 +688,11 @@
         <div class="splash-content">
             <div class="splash-logo">
                 ROLEX
-                <small>✦ sunar... ✦</small>
+                <small>✦</small>
             </div>
-            <div class="splash-divider"></div>
-            <div class="splash-sub">Hoş Geldiniz</div>
-            <div class="splash-click">
-                <span class="shine"></span>
-                TIKLA
-            </div>
-            <div style="margin-top:20px;font-size:12px;color:rgba(255,255,255,0.15);letter-spacing:2px;">
-                ⚡ premium deneyim ⚡
-            </div>
+            <div class="splash-click">click to join...</div>
+            <div class="splash-sub">⚡ premium experience ⚡</div>
         </div>
-        <div class="splash-footer">© 2026 Rolex Bio</div>
     </div>
 
     <!-- ============ ANA SAYFA ============ -->
@@ -736,7 +740,6 @@
         </div>
     </div>
 
-    <!-- Görüntülenme Sayacı -->
     <div class="view-count" id="viewCountWrap">
         <span class="eye-3d">👁</span>
         <span id="viewCount">0</span>
@@ -756,7 +759,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // ============ GİRİŞ EKRANI KONTROLÜ ============
         let musicStarted = false;
         let splashScreen = document.getElementById('splashScreen');
         let audio = document.getElementById('bgMusic');
@@ -767,28 +769,19 @@
 
         function enterSite() {
             splashScreen.classList.add('hidden');
-            
-            // Müziği başlat
             if (audio.src && !musicStarted) {
                 audio.play().then(() => {
                     musicStarted = true;
                     updatePlayIcon(true);
-                }).catch(() => {
-                    // Hata durumunda butonu göster
-                });
+                }).catch(() => {});
             }
-            
-            // Session'a kaydet
             sessionStorage.setItem('site_entered', 'true');
         }
 
-        // Sayfa yüklendiğinde giriş ekranını göster
-        // Eğer daha önce girildiyse direkt geç
         if (sessionStorage.getItem('site_entered') === 'true') {
             splashScreen.classList.add('hidden');
         }
 
-        // ============ MÜZİK KONTROLLERİ ============
         function updatePlayIcon(isPlaying) {
             if (isPlaying) {
                 playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
@@ -842,9 +835,6 @@
         document.getElementById('musicPrevBtn').addEventListener('click', () => {
             audio.currentTime = 0;
         });
-        document.getElementById('musicNextBtn').addEventListener('click', () => {
-            // İleride playlist desteği
-        });
 
         function glowShadow(colorStr, intensity) {
             const gi = (intensity !== undefined && intensity !== null) ? intensity / 100 : 0;
@@ -853,7 +843,6 @@
             return `0 0 ${(gi * 14).toFixed(0)}px rgba(${c},${(gi * 0.85).toFixed(2)})`;
         }
 
-        // ============ FİRESTORE VERİ AKIŞI ============
         db.collection("bio").doc("profile").onSnapshot((doc) => {
             if (!doc.exists) return;
             const d = doc.data();
@@ -957,15 +946,9 @@
             document.body.style.background = d.bgImage ? `url(${d.bgImage}) center/cover no-repeat fixed` : (d.bgColor || '#0a0a0a');
             document.body.style.backgroundColor = d.bgColor || '#0a0a0a';
 
-            const gi = (d.btnGlowIntensity !== undefined && d.btnGlowIntensity !== null ? d.btnGlowIntensity : 50) / 100;
-            const gc = d.btnGlowColor || '255,255,255';
-            document.documentElement.style.setProperty('--glow-color', `rgba(${gc},${(0.4 * gi).toFixed(2)})`);
-            document.documentElement.style.setProperty('--glow-color-soft', `rgba(${gc},${(0.12 * gi).toFixed(2)})`);
-            document.documentElement.style.setProperty('--glow-shimmer', `rgba(${gc},${(0.3 * gi).toFixed(2)})`);
-
             const tgColor = d.telegramGlowColor || '0,136,204';
             const tgIntensity = (d.telegramGlowIntensity || 80) / 100;
-            const tgSize = d.telegramSize || 54;
+            const tgSize = d.telegramSize || 72;
 
             const viewCountWrap = document.getElementById('viewCountWrap');
             viewCountWrap.style.color = d.viewColor || '#999999';
@@ -989,8 +972,6 @@
 
             const lc = document.getElementById('linksContainer');
             lc.innerHTML = '';
-            const btnGlow = d.btnGlow !== false;
-            const btnShimmer = d.btnShimmer !== false;
             if (d.links && d.links.length > 0) {
                 d.links.forEach(link => {
                     const a = document.createElement('a');
@@ -999,36 +980,30 @@
                     a.rel = 'noopener noreferrer';
                     a.title = link.title || '';
                     a.className = 'link-btn';
-                    if (btnGlow) a.classList.add('glow-border');
-                    if (btnShimmer) a.classList.add('glow-active');
-
+                    
+                    // Telegram özel - büyük ve sade
                     if (link.brand === 'telegram') {
+                        a.classList.add('telegram-link');
+                        a.style.color = '#ffffff';
+                        a.style.filter = `drop-shadow(0 0 ${20 + tgIntensity * 30}px rgba(${tgColor},${0.2 + tgIntensity * 0.4}))`;
+                        a.style.fontSize = (tgSize * 0.65) + 'px';
                         a.style.width = tgSize + 'px';
                         a.style.height = tgSize + 'px';
-                        a.style.setProperty('--glow-color', `rgba(${tgColor},${tgIntensity * 0.6})`);
-                        a.style.setProperty('--glow-color-soft', `rgba(${tgColor},${tgIntensity * 0.2})`);
-                        a.style.setProperty('--glow-shimmer', `rgba(${tgColor},${tgIntensity * 0.5})`);
-                        a.style.fontSize = (tgSize * 0.45) + 'px';
-                    } else if (link.color) {
-                        a.style.setProperty('--glow-color', `rgba(${link.color},0.5)`);
-                        a.style.setProperty('--glow-color-soft', `rgba(${link.color},0.15)`);
-                        a.style.setProperty('--glow-shimmer', `rgba(${link.color},0.45)`);
-                        if (!d.btnBorderColor) a.style.borderColor = `rgba(${link.color},0.5)`;
-                    }
-
-                    if (d.btnBgColor) a.style.background = d.btnBgColor;
-                    if (d.btnBorderColor) a.style.borderColor = d.btnBorderColor;
-
-                    if (d.btnHoverColor) {
+                        // Telegram'a özel hover
                         a.onmouseenter = () => {
-                            a.style.background = d.btnHoverColor;
-                            a.style.borderColor = d.btnHoverBorder || d.btnHoverColor;
+                            a.style.filter = `drop-shadow(0 0 ${40 + tgIntensity * 40}px rgba(${tgColor},${0.4 + tgIntensity * 0.5}))`;
                         };
                         a.onmouseleave = () => {
-                            a.style.background = d.btnBgColor || 'rgba(255,255,255,0.06)';
-                            a.style.borderColor = d.btnBorderColor || (link.color ? `rgba(${link.color},0.5)` : 'rgba(255,255,255,0.15)');
+                            a.style.filter = `drop-shadow(0 0 ${20 + tgIntensity * 30}px rgba(${tgColor},${0.2 + tgIntensity * 0.4}))`;
                         };
+                    } else {
+                        // Diğer linkler - sadece ikon
+                        a.style.fontSize = '28px';
+                        a.style.color = 'rgba(255,255,255,0.5)';
+                        a.onmouseenter = () => { a.style.color = '#fff'; };
+                        a.onmouseleave = () => { a.style.color = 'rgba(255,255,255,0.5)'; };
                     }
+
                     const iconHTML = link.brand
                         ? `<i class="bi bi-${link.brand}"></i>`
                         : `<span class="link-icon">${link.icon || '🔗'}</span>`;
@@ -1039,7 +1014,7 @@
                 lc.innerHTML = '<p class="no-links-text">Henüz link eklenmedi</p>';
             }
 
-            // ============ MÜZİK YÜKLEME ============
+            // Müzik
             const mp = document.getElementById('musicPlayer');
             const cover = document.getElementById('musicCover');
             if (d.musicUrl) {
@@ -1075,8 +1050,6 @@
                 if (audio.src !== d.musicUrl) {
                     audio.src = d.musicUrl;
                     audio.load();
-                    
-                    // Kullanıcı giriş yaptıysa otomatik çal
                     if (sessionStorage.getItem('site_entered') === 'true' && d.musicAutoplay !== false) {
                         audio.play().then(() => {
                             musicStarted = true;
@@ -1092,7 +1065,6 @@
             }
         });
 
-        // ============ SAYAÇ ============
         const viewRef = db.collection("bio").doc("views");
         viewRef.get().then((doc) => {
             let count = doc.exists ? (doc.data().count || 0) : 0;
