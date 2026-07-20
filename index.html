@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bio</title>
+    <title>Rolex | Bio</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,6 +16,248 @@
             --glow-color-soft: rgba(255,255,255,0.03);
             --glow-shimmer: rgba(255,255,255,0.15);
         }
+        
+        /* ============ GİRİŞ EKRANI ============ */
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            cursor: pointer;
+            overflow: hidden;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        #splashScreen.hidden {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+        
+        /* Yıldırım Efektleri */
+        .lightning-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .lightning {
+            position: absolute;
+            background: white;
+            opacity: 0;
+            border-radius: 2px;
+            animation: lightningFlash 3s ease-in-out infinite;
+        }
+        .lightning:nth-child(1) {
+            top: 10%;
+            left: 15%;
+            width: 2px;
+            height: 120px;
+            animation-delay: 0.2s;
+            box-shadow: 0 0 20px #fff, 0 0 40px #4488ff, 0 0 60px #4488ff44;
+        }
+        .lightning:nth-child(2) {
+            top: 20%;
+            right: 20%;
+            width: 2px;
+            height: 80px;
+            animation-delay: 1.2s;
+            box-shadow: 0 0 20px #fff, 0 0 40px #ff4488, 0 0 60px #ff448844;
+        }
+        .lightning:nth-child(3) {
+            bottom: 30%;
+            left: 25%;
+            width: 2px;
+            height: 100px;
+            animation-delay: 2.2s;
+            box-shadow: 0 0 20px #fff, 0 0 40px #44ff88, 0 0 60px #44ff8844;
+        }
+        .lightning:nth-child(4) {
+            top: 40%;
+            right: 30%;
+            width: 2px;
+            height: 90px;
+            animation-delay: 0.8s;
+            box-shadow: 0 0 20px #fff, 0 0 40px #ffaa44, 0 0 60px #ffaa4444;
+        }
+        .lightning:nth-child(5) {
+            bottom: 15%;
+            right: 15%;
+            width: 2px;
+            height: 70px;
+            animation-delay: 1.8s;
+            box-shadow: 0 0 20px #fff, 0 0 40px #aa44ff, 0 0 60px #aa44ff44;
+        }
+        .lightning:nth-child(6) {
+            top: 50%;
+            left: 5%;
+            width: 2px;
+            height: 60px;
+            animation-delay: 2.8s;
+            box-shadow: 0 0 20px #fff, 0 0 40px #ff4488, 0 0 60px #ff448844;
+        }
+        .lightning:nth-child(7) {
+            top: 5%;
+            left: 50%;
+            width: 2px;
+            height: 100px;
+            animation-delay: 0.5s;
+            box-shadow: 0 0 20px #fff, 0 0 40px #88ff44, 0 0 60px #88ff4444;
+        }
+        .lightning:nth-child(8) {
+            bottom: 5%;
+            left: 40%;
+            width: 2px;
+            height: 80px;
+            animation-delay: 1.5s;
+            box-shadow: 0 0 20px #fff, 0 0 40px #4488ff, 0 0 60px #4488ff44;
+        }
+        
+        @keyframes lightningFlash {
+            0%, 90%, 100% { opacity: 0; transform: scaleY(0.3); }
+            92% { opacity: 1; transform: scaleY(1); }
+            94% { opacity: 0; transform: scaleY(0.5); }
+            96% { opacity: 1; transform: scaleY(1); }
+            98% { opacity: 0.5; transform: scaleY(0.8); }
+        }
+        
+        /* Yıldırım Patlaması (Büyük Flaş) */
+        .flash-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.15), transparent 70%);
+            pointer-events: none;
+            opacity: 0;
+            animation: flashPulse 4s ease-in-out infinite;
+        }
+        @keyframes flashPulse {
+            0%, 90%, 100% { opacity: 0; }
+            92% { opacity: 1; }
+            94% { opacity: 0; }
+            96% { opacity: 0.6; }
+            98% { opacity: 0; }
+        }
+        
+        /* Giriş Ekranı İçerik */
+        .splash-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            animation: fadeInSplash 1.5s ease;
+        }
+        @keyframes fadeInSplash {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .splash-logo {
+            font-size: 72px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffd700, #ff6b00, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(255,215,0,0.3);
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            font-family: 'Bungee', cursive;
+        }
+        .splash-logo small {
+            font-size: 24px;
+            display: block;
+            background: linear-gradient(135deg, #ff4444, #ff8800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 8px;
+            margin-top: -5px;
+        }
+        
+        .splash-sub {
+            font-size: 16px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        
+        .splash-divider {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff4444, transparent);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .splash-click {
+            display: inline-block;
+            padding: 16px 48px;
+            border: 2px solid rgba(255,68,68,0.4);
+            border-radius: 50px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255,68,68,0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .splash-click:hover {
+            transform: scale(1.05);
+            border-color: #ff4444;
+            background: rgba(255,68,68,0.2);
+            box-shadow: 0 0 40px rgba(255,68,68,0.2);
+        }
+        .splash-click:active {
+            transform: scale(0.95);
+        }
+        .splash-click .shine {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
+            transform: rotate(45deg);
+            animation: shineMove 3s linear infinite;
+        }
+        @keyframes shineMove {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        /* Alt Bilgi */
+        .splash-footer {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 1;
+            font-size: 12px;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 2px;
+        }
+        
+        /* ============ ANA SAYFA ============ */
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             min-height: 100vh; color: white;
@@ -269,7 +511,7 @@
         .link-icon { line-height: 1; }
         .no-links-text { opacity: 0.5; font-size: 13px; }
 
-        /* MÜZİK ÇALAR - MODERN 3D BUTONLAR */
+        /* MÜZİK ÇALAR */
         .music-player {
             margin-top: 18px; border-radius: 16px; padding: 14px 18px;
             display: flex; align-items: center; gap: 14px;
@@ -316,7 +558,6 @@
             align-items: center;
             justify-content: center;
             transition: all 0.25s ease;
-            position: relative;
             padding: 0;
         }
         .music-controls button svg {
@@ -410,10 +651,47 @@
             .music-controls button.play-btn { width: 36px; height: 36px; }
             .music-controls button.play-btn svg { width: 18px; height: 18px; }
             .view-count { left: 12px; bottom: 12px; font-size: 11px; padding: 6px 12px; }
+            .splash-logo { font-size: 48px; }
+            .splash-logo small { font-size: 18px; }
+            .splash-click { padding: 14px 32px; font-size: 15px; }
         }
     </style>
 </head>
 <body>
+    <!-- ============ GİRİŞ EKRANI ============ -->
+    <div id="splashScreen" onclick="enterSite()">
+        <!-- Yıldırım Efektleri -->
+        <div class="lightning-container">
+            <div class="lightning"></div>
+            <div class="lightning"></div>
+            <div class="lightning"></div>
+            <div class="lightning"></div>
+            <div class="lightning"></div>
+            <div class="lightning"></div>
+            <div class="lightning"></div>
+            <div class="lightning"></div>
+            <div class="flash-overlay"></div>
+        </div>
+        
+        <div class="splash-content">
+            <div class="splash-logo">
+                ROLEX
+                <small>✦ sunar... ✦</small>
+            </div>
+            <div class="splash-divider"></div>
+            <div class="splash-sub">Hoş Geldiniz</div>
+            <div class="splash-click">
+                <span class="shine"></span>
+                TIKLA
+            </div>
+            <div style="margin-top:20px;font-size:12px;color:rgba(255,255,255,0.15);letter-spacing:2px;">
+                ⚡ premium deneyim ⚡
+            </div>
+        </div>
+        <div class="splash-footer">© 2026 Rolex Bio</div>
+    </div>
+
+    <!-- ============ ANA SAYFA ============ -->
     <div class="bg-overlay" id="bgOverlay"></div>
     <div class="particles" id="particles"></div>
     <div class="container">
@@ -478,21 +756,39 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        function glowShadow(colorStr, intensity) {
-            const gi = (intensity !== undefined && intensity !== null) ? intensity / 100 : 0;
-            if (!gi) return 'none';
-            const c = colorStr || '255,255,255';
-            return `0 0 ${(gi * 14).toFixed(0)}px rgba(${c},${(gi * 0.85).toFixed(2)})`;
-        }
-
-        // Müzik kontrolleri
+        // ============ GİRİŞ EKRANI KONTROLÜ ============
+        let musicStarted = false;
+        let splashScreen = document.getElementById('splashScreen');
         let audio = document.getElementById('bgMusic');
         let playBtn = document.getElementById('musicPlayBtn');
         let playIcon = document.getElementById('playIcon');
         let seekBar = document.getElementById('musicSeek');
         let isUserSeeking = false;
 
-        // Play/Pause ikon değiştirme
+        function enterSite() {
+            splashScreen.classList.add('hidden');
+            
+            // Müziği başlat
+            if (audio.src && !musicStarted) {
+                audio.play().then(() => {
+                    musicStarted = true;
+                    updatePlayIcon(true);
+                }).catch(() => {
+                    // Hata durumunda butonu göster
+                });
+            }
+            
+            // Session'a kaydet
+            sessionStorage.setItem('site_entered', 'true');
+        }
+
+        // Sayfa yüklendiğinde giriş ekranını göster
+        // Eğer daha önce girildiyse direkt geç
+        if (sessionStorage.getItem('site_entered') === 'true') {
+            splashScreen.classList.add('hidden');
+        }
+
+        // ============ MÜZİK KONTROLLERİ ============
         function updatePlayIcon(isPlaying) {
             if (isPlaying) {
                 playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
@@ -543,7 +839,6 @@
             seekBar.value = 0;
         });
 
-        // Prev/Next butonları (şimdilik çalışmıyor, ileride playlist eklenecek)
         document.getElementById('musicPrevBtn').addEventListener('click', () => {
             audio.currentTime = 0;
         });
@@ -551,7 +846,14 @@
             // İleride playlist desteği
         });
 
-        // Ana veri akışı
+        function glowShadow(colorStr, intensity) {
+            const gi = (intensity !== undefined && intensity !== null) ? intensity / 100 : 0;
+            if (!gi) return 'none';
+            const c = colorStr || '255,255,255';
+            return `0 0 ${(gi * 14).toFixed(0)}px rgba(${c},${(gi * 0.85).toFixed(2)})`;
+        }
+
+        // ============ FİRESTORE VERİ AKIŞI ============
         db.collection("bio").doc("profile").onSnapshot((doc) => {
             if (!doc.exists) return;
             const d = doc.data();
@@ -737,6 +1039,7 @@
                 lc.innerHTML = '<p class="no-links-text">Henüz link eklenmedi</p>';
             }
 
+            // ============ MÜZİK YÜKLEME ============
             const mp = document.getElementById('musicPlayer');
             const cover = document.getElementById('musicCover');
             if (d.musicUrl) {
@@ -772,13 +1075,13 @@
                 if (audio.src !== d.musicUrl) {
                     audio.src = d.musicUrl;
                     audio.load();
-                    if (d.musicAutoplay !== false) {
-                        audio.play().catch(() => {
-                            updatePlayIcon(false);
-                        });
-                    } else {
-                        audio.pause();
-                        updatePlayIcon(false);
+                    
+                    // Kullanıcı giriş yaptıysa otomatik çal
+                    if (sessionStorage.getItem('site_entered') === 'true' && d.musicAutoplay !== false) {
+                        audio.play().then(() => {
+                            musicStarted = true;
+                            updatePlayIcon(true);
+                        }).catch(() => {});
                     }
                 }
             } else {
@@ -789,6 +1092,7 @@
             }
         });
 
+        // ============ SAYAÇ ============
         const viewRef = db.collection("bio").doc("views");
         viewRef.get().then((doc) => {
             let count = doc.exists ? (doc.data().count || 0) : 0;
