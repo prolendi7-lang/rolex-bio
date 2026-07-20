@@ -8,6 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Permanent+Marker&family=Righteous&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -35,7 +36,8 @@
         }
         .container { position: relative; z-index: 1; max-width: 500px; width: 100%; text-align: center; }
         .profile-card {
-            border-radius: 24px; padding: 40px 30px 35px;
+            position: relative;
+            border-radius: 24px; padding: 40px 30px 55px;
             border: 1px solid rgba(255,255,255,0.1);
             animation: fadeInUp 0.8s ease;
             background: rgba(20,20,20,0.85);
@@ -71,6 +73,15 @@
             display: inline-block;
         }
         .name-emoji.d3:hover { transform: perspective(200px) rotateY(0deg) rotateX(0deg) scale(1.1); }
+        .name-badge-3d {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 50%; color: #fff;
+            font-size: 12px; flex-shrink: 0;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.5), inset 0 -2px 2px rgba(0,0,0,0.3);
+            transform: perspective(120px) rotateX(12deg) rotateY(-8deg);
+            transition: transform 0.3s;
+        }
+        .name-badge-3d:hover { transform: perspective(120px) rotateX(0deg) rotateY(0deg) scale(1.1); }
         .name {
             font-size: 28px; font-weight: 700; letter-spacing: 1px;
             background: linear-gradient(135deg, #ffffff, #cccccc);
@@ -124,12 +135,13 @@
         .music-title { font-size: 13px; font-weight: 600; }
         .music-artist { font-size: 11px; color: #888; }
         .view-count {
+            position: absolute; left: 16px; bottom: 14px;
             display: inline-flex; align-items: center; gap: 5px;
             background: rgba(255,255,255,0.05); padding: 6px 14px;
-            border-radius: 20px; font-size: 12px; color: #999; margin-top: 15px;
+            border-radius: 20px; font-size: 12px; color: #999;
         }
         @media (max-width: 480px) {
-            .profile-card { padding: 30px 20px 25px; }
+            .profile-card { padding: 30px 20px 50px; }
             .name { font-size: 24px; }
             .avatar { width: 85px; height: 85px; }
             .music-player { padding: 12px 15px; }
@@ -154,7 +166,7 @@
                 <span id="statusIcon">📍</span><span id="statusText"></span>
             </div>
             <div class="links" id="linksContainer"></div>
-            <div class="view-count">👁 <span id="viewCount">0</span></div>
+            <div class="view-count" id="viewCountWrap">👁 <span id="viewCount">0</span></div>
         </div>
         <div class="music-player hidden" id="musicPlayer">
             <img class="music-cover" id="musicCover" src="https://i.imgur.com/default.png" alt="cover">
@@ -178,20 +190,46 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        function glowShadow(colorStr, intensity) {
+            const gi = (intensity !== undefined && intensity !== null) ? intensity / 100 : 0;
+            if (!gi) return 'none';
+            const c = colorStr || '255,255,255';
+            return `0 0 ${(gi * 14).toFixed(0)}px rgba(${c},${(gi * 0.85).toFixed(2)})`;
+        }
+
         db.collection("bio").doc("profile").onSnapshot((doc) => {
             if (!doc.exists) return;
             const d = doc.data();
 
             // İsim
             document.getElementById('nameDisplay').textContent = d.name || 'İsimsiz';
-            document.getElementById('bioDisplay').textContent = d.bio || '';
+            const bioEl = document.getElementById('bioDisplay');
+            bioEl.textContent = d.bio || '';
+            bioEl.style.color = d.bioColor || '#aaaaaa';
+            bioEl.style.textShadow = glowShadow(d.bioGlowColor, d.bioGlowIntensity);
             document.getElementById('avatar').src = d.avatar || 'https://i.imgur.com/default.png';
 
-            // Emojiler 3D
+            // Emojiler 3D / İsim yanı rozet
             const el = document.getElementById('nameEmojiLeft');
             const er = document.getElementById('nameEmojiRight');
-            el.textContent = d.emojiLeft || '';
-            er.textContent = d.emojiRight || '';
+            const nameBadgeOn = d.nameBadge === true;
+            const nameBadgePos = d.nameBadgePosition || 'right';
+            const badgeIconVal = d.badgeIcon || '✓';
+            const badgeColorVal = d.badgeColor || 'linear-gradient(135deg, #1da1f2, #0d8bd9)';
+            const badgeHTML = `<span class="name-badge-3d" style="background:${badgeColorVal}">${badgeIconVal}</span>`;
+
+            if (nameBadgeOn && nameBadgePos === 'left') {
+                el.innerHTML = badgeHTML;
+            } else {
+                el.innerHTML = '';
+                el.textContent = d.emojiLeft || '';
+            }
+            if (nameBadgeOn && nameBadgePos === 'right') {
+                er.innerHTML = badgeHTML;
+            } else {
+                er.innerHTML = '';
+                er.textContent = d.emojiRight || '';
+            }
             el.className = 'name-emoji' + (d.emoji3d ? ' d3' : '');
             er.className = 'name-emoji' + (d.emoji3d ? ' d3' : '');
 
@@ -228,6 +266,8 @@
                 statusLine.classList.remove('hidden');
                 document.getElementById('statusIcon').textContent = d.statusIcon || '📍';
                 document.getElementById('statusText').textContent = d.statusText;
+                statusLine.style.color = d.statusColor || '#bbbbbb';
+                statusLine.style.textShadow = glowShadow(d.statusGlowColor, d.statusGlowIntensity);
             } else {
                 statusLine.classList.add('hidden');
             }
@@ -242,6 +282,11 @@
             document.documentElement.style.setProperty('--glow-color', `rgba(${gc},${(0.4 * gi).toFixed(2)})`);
             document.documentElement.style.setProperty('--glow-color-soft', `rgba(${gc},${(0.12 * gi).toFixed(2)})`);
             document.documentElement.style.setProperty('--glow-shimmer', `rgba(${gc},${(0.3 * gi).toFixed(2)})`);
+
+            // Görüntülenme sayacı renk/parlama
+            const viewCountWrap = document.getElementById('viewCountWrap');
+            viewCountWrap.style.color = d.viewColor || '#999999';
+            viewCountWrap.style.textShadow = glowShadow(d.viewGlowColor, d.viewGlowIntensity);
 
             // Partikül
             const pc = document.getElementById('particles');
@@ -290,7 +335,10 @@
                         a.onmouseleave = () => { a.style.background = d.btnBgColor || 'rgba(255,255,255,0.06)';
                             a.style.borderColor = d.btnBorderColor || (link.color ? `rgba(${link.color},0.5)` : 'rgba(255,255,255,0.15)'); };
                     }
-                    a.innerHTML = `<span class="link-icon">${link.icon || '🔗'}</span>`;
+                    const iconHTML = link.brand
+                        ? `<i class="bi bi-${link.brand}"></i>`
+                        : `<span class="link-icon">${link.icon || '🔗'}</span>`;
+                    a.innerHTML = iconHTML;
                     lc.appendChild(a);
                 });
             } else {
