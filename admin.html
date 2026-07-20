@@ -70,6 +70,20 @@
                 <h3>👤 Profil</h3>
                 <input type="text" id="nameInput" placeholder="İsim">
                 <textarea id="bioInput" placeholder="Açıklama" rows="2"></textarea>
+                <div class="inline-group">
+                    <div style="flex:1;">
+                        <span class="hint" style="margin:0 0 4px;display:block;">Yazı rengi</span>
+                        <input type="color" id="bioColorPicker" value="#aaaaaa" onchange="document.getElementById('bioColor').value=this.value">
+                    </div>
+                    <div style="flex:1;">
+                        <span class="hint" style="margin:0 0 4px;display:block;">Parlama rengi</span>
+                        <input type="color" id="bioGlowColorPicker" value="#ffffff" onchange="document.getElementById('bioGlowColor').value=hexToRgbStr(this.value)">
+                    </div>
+                </div>
+                <input type="range" id="bioGlowIntensity" min="0" max="100" value="0" oninput="document.getElementById('bgiv').textContent=this.value+'%'">
+                <div class="range-label"><span>Bio parlama şiddeti</span><span id="bgiv">0%</span></div>
+                <input type="hidden" id="bioColor" value="#aaaaaa">
+                <input type="hidden" id="bioGlowColor" value="255,255,255">
                 <input type="text" id="avatarInput" placeholder="Fotoğraf linki">
 
                 <h4>İsim Yanı Emojiler (3D efekti)</h4>
@@ -117,17 +131,40 @@
                     <input type="text" id="badgeIcon" placeholder="Rozet ikon (✓, ★, 🔥)" maxlength="2">
                     <input type="text" id="badgeColor" placeholder="Rozet rengi (css)">
                 </div>
+                <div class="toggle-row">
+                    <span>İsmin yanında da göster (3D)</span>
+                    <input type="checkbox" id="nameBadge">
+                </div>
+                <select id="nameBadgePosition">
+                    <option value="right">İsmin sağında</option>
+                    <option value="left">İsmin solunda</option>
+                </select>
+                <p class="hint">Açarsan o taraftaki emoji yerine bu rozet gösterilir.</p>
 
                 <h4>Durum Satırı (📍 Telegram gibi, isteğe bağlı)</h4>
                 <div class="inline-group">
                     <input type="text" id="statusIcon" placeholder="İkon (📍)" maxlength="4" style="flex:0 0 80px;">
                     <input type="text" id="statusText" placeholder="Metin (örn: Telegram, İstanbul)">
                 </div>
+                <div class="inline-group">
+                    <div style="flex:1;">
+                        <span class="hint" style="margin:0 0 4px;display:block;">Yazı rengi</span>
+                        <input type="color" id="statusColorPicker" value="#bbbbbb" onchange="document.getElementById('statusColor').value=this.value">
+                    </div>
+                    <div style="flex:1;">
+                        <span class="hint" style="margin:0 0 4px;display:block;">Parlama rengi</span>
+                        <input type="color" id="statusGlowColorPicker" value="#ffffff" onchange="document.getElementById('statusGlowColor').value=hexToRgbStr(this.value)">
+                    </div>
+                </div>
+                <input type="range" id="statusGlowIntensity" min="0" max="100" value="0" oninput="document.getElementById('sgiv').textContent=this.value+'%'">
+                <div class="range-label"><span>Durum satırı parlama şiddeti</span><span id="sgiv">0%</span></div>
+                <input type="hidden" id="statusColor" value="#bbbbbb">
+                <input type="hidden" id="statusGlowColor" value="255,255,255">
                 <p class="hint">Boş bırakırsan bu satır sitede görünmez.</p>
 
                 <h4>Kart Saydamlık & Bulanıklık</h4>
-                <input type="range" id="cardOpacity" min="20" max="100" value="85" oninput="document.getElementById('cov').textContent=this.value+'%'">
-                <div class="range-label"><span>Saydamlık</span><span id="cov">85%</span></div>
+                <input type="range" id="cardOpacity" min="0" max="100" value="85" oninput="document.getElementById('cov').textContent=this.value+'%'">
+                <div class="range-label"><span>Saydamlık (0 = tamamen görünmez)</span><span id="cov">85%</span></div>
                 <input type="range" id="cardBlur" min="0" max="40" value="20" oninput="document.getElementById('cbv').textContent=this.value+'px'">
                 <div class="range-label"><span>Blur</span><span id="cbv">20px</span></div>
 
@@ -212,8 +249,8 @@
                 </div>
                 <p class="hint">Manuel çal/durdur tuşu kaldırıldı, müzik sadece otomatik çalar.</p>
                 <h4>Müzik Kartı Saydamlık</h4>
-                <input type="range" id="musicOpacity" min="20" max="100" value="90" oninput="document.getElementById('mov').textContent=this.value+'%'">
-                <div class="range-label"><span>Saydamlık</span><span id="mov">90%</span></div>
+                <input type="range" id="musicOpacity" min="0" max="100" value="90" oninput="document.getElementById('mov').textContent=this.value+'%'">
+                <div class="range-label"><span>Saydamlık (0 = tamamen görünmez)</span><span id="mov">90%</span></div>
                 <input type="range" id="musicBlur" min="0" max="30" value="10" oninput="document.getElementById('mbv').textContent=this.value+'px'">
                 <div class="range-label"><span>Blur</span><span id="mbv">10px</span></div>
                 <button onclick="saveMusic()">💾 Müziği Kaydet</button>
@@ -223,6 +260,22 @@
             <div class="card">
                 <h3>📊 İstatistik</h3>
                 <p style="font-size:18px;">👁 <strong id="totalViews">0</strong> görüntülenme</p>
+                <h4>Sayaç Görünümü (sol alt köşede)</h4>
+                <div class="inline-group">
+                    <div style="flex:1;">
+                        <span class="hint" style="margin:0 0 4px;display:block;">Yazı rengi</span>
+                        <input type="color" id="viewColorPicker" value="#999999" onchange="document.getElementById('viewColor').value=this.value">
+                    </div>
+                    <div style="flex:1;">
+                        <span class="hint" style="margin:0 0 4px;display:block;">Parlama rengi</span>
+                        <input type="color" id="viewGlowColorPicker" value="#ffffff" onchange="document.getElementById('viewGlowColor').value=hexToRgbStr(this.value)">
+                    </div>
+                </div>
+                <input type="range" id="viewGlowIntensity" min="0" max="100" value="0" oninput="document.getElementById('vgiv').textContent=this.value+'%'">
+                <div class="range-label"><span>Sayaç parlama şiddeti</span><span id="vgiv">0%</span></div>
+                <input type="hidden" id="viewColor" value="#999999">
+                <input type="hidden" id="viewGlowColor" value="255,255,255">
+                <button onclick="saveProfile()">💾 Sayaç Görünümünü Kaydet</button>
                 <a href="index.html" target="_blank" class="preview-link">🔍 Bio Sayfasını Gör →</a>
             </div>
             <p style="text-align:center;color:#333;font-size:11px;padding-bottom:30px;">Admin Panel</p>
@@ -281,16 +334,16 @@
         let selectedBadge = '';
 
         const TEMPLATES = {
-            'telegram': { icon: '📱', title: 'Telegram', url: 'https://t.me/kullaniciadi', color: '0,136,204' },
-            'discord': { icon: '🎮', title: 'Discord', url: 'https://discord.gg/sunucu', color: '88,101,242' },
-            'youtube': { icon: '▶️', title: 'YouTube', url: 'https://youtube.com/@kanal', color: '255,0,0' },
-            'instagram': { icon: '📷', title: 'Instagram', url: 'https://instagram.com/kullaniciadi', color: '225,48,108' },
-            'tiktok': { icon: '🎵', title: 'TikTok', url: 'https://tiktok.com/@kullaniciadi', color: '37,244,238' },
-            'twitch': { icon: '📺', title: 'Twitch', url: 'https://twitch.tv/kullaniciadi', color: '145,70,255' },
-            'steam': { icon: '🎯', title: 'Steam', url: 'https://steamcommunity.com/id/kullaniciadi', color: '102,192,244' },
-            'spotify': { icon: '🎧', title: 'Spotify', url: 'https://open.spotify.com/user/kullaniciadi', color: '30,215,96' },
-            'github': { icon: '💻', title: 'GitHub', url: 'https://github.com/kullaniciadi', color: '255,255,255' },
-            'website': { icon: '🌐', title: 'Website', url: 'https://', color: '255,255,255' }
+            'telegram': { icon: '📱', brand: 'telegram', title: 'Telegram', url: 'https://t.me/kullaniciadi', color: '0,136,204' },
+            'discord': { icon: '🎮', brand: 'discord', title: 'Discord', url: 'https://discord.gg/sunucu', color: '88,101,242' },
+            'youtube': { icon: '▶️', brand: 'youtube', title: 'YouTube', url: 'https://youtube.com/@kanal', color: '255,0,0' },
+            'instagram': { icon: '📷', brand: 'instagram', title: 'Instagram', url: 'https://instagram.com/kullaniciadi', color: '225,48,108' },
+            'tiktok': { icon: '🎵', brand: 'tiktok', title: 'TikTok', url: 'https://tiktok.com/@kullaniciadi', color: '37,244,238' },
+            'twitch': { icon: '📺', brand: 'twitch', title: 'Twitch', url: 'https://twitch.tv/kullaniciadi', color: '145,70,255' },
+            'steam': { icon: '🎯', brand: 'steam', title: 'Steam', url: 'https://steamcommunity.com/id/kullaniciadi', color: '102,192,244' },
+            'spotify': { icon: '🎧', brand: 'spotify', title: 'Spotify', url: 'https://open.spotify.com/user/kullaniciadi', color: '30,215,96' },
+            'github': { icon: '💻', brand: 'github', title: 'GitHub', url: 'https://github.com/kullaniciadi', color: '255,255,255' },
+            'website': { icon: '🌐', brand: 'globe', title: 'Website', url: 'https://', color: '255,255,255' }
         };
 
         function login() {
@@ -325,6 +378,16 @@
                 document.getElementById('emojiRight').value = d.emojiRight || '';
                 document.getElementById('emoji3d').checked = d.emoji3d !== false;
 
+                document.getElementById('bioColor').value = d.bioColor || '#aaaaaa';
+                document.getElementById('bioColorPicker').value = d.bioColor || '#aaaaaa';
+                document.getElementById('bioGlowColor').value = d.bioGlowColor || '255,255,255';
+                document.getElementById('bioGlowColorPicker').value = rgbStrToHex(d.bioGlowColor || '255,255,255');
+                document.getElementById('bioGlowIntensity').value = d.bioGlowIntensity || 0;
+                document.getElementById('bgiv').textContent = (d.bioGlowIntensity || 0) + '%';
+
+                document.getElementById('nameBadge').checked = d.nameBadge === true;
+                document.getElementById('nameBadgePosition').value = d.nameBadgePosition || 'right';
+
                 selectedEffect = d.nameEffect || 'default';
                 document.querySelectorAll('.effect-btn').forEach(b => {
                     b.classList.toggle('active', b.dataset.effect === selectedEffect);
@@ -334,6 +397,12 @@
 
                 document.getElementById('statusIcon').value = d.statusIcon || '📍';
                 document.getElementById('statusText').value = d.statusText || '';
+                document.getElementById('statusColor').value = d.statusColor || '#bbbbbb';
+                document.getElementById('statusColorPicker').value = d.statusColor || '#bbbbbb';
+                document.getElementById('statusGlowColor').value = d.statusGlowColor || '255,255,255';
+                document.getElementById('statusGlowColorPicker').value = rgbStrToHex(d.statusGlowColor || '255,255,255');
+                document.getElementById('statusGlowIntensity').value = d.statusGlowIntensity || 0;
+                document.getElementById('sgiv').textContent = (d.statusGlowIntensity || 0) + '%';
 
                 document.getElementById('showBadge').checked = d.showBadge !== false;
                 selectedBadge = d.badgeStyle || '';
@@ -378,6 +447,13 @@
 
                 currentLinks = d.links || [];
                 renderLinks();
+
+                document.getElementById('viewColor').value = d.viewColor || '#999999';
+                document.getElementById('viewColorPicker').value = d.viewColor || '#999999';
+                document.getElementById('viewGlowColor').value = d.viewGlowColor || '255,255,255';
+                document.getElementById('viewGlowColorPicker').value = rgbStrToHex(d.viewGlowColor || '255,255,255');
+                document.getElementById('viewGlowIntensity').value = d.viewGlowIntensity || 0;
+                document.getElementById('vgiv').textContent = (d.viewGlowIntensity || 0) + '%';
             }).catch(err => { console.error(err); msg('Veri yüklenemedi: ' + err.message, 'error'); });
 
             db.collection("bio").doc("views").get().then(doc => {
@@ -392,7 +468,7 @@
                 const d = document.createElement('div');
                 d.className = 'link-item';
                 d.innerHTML = `
-                    <input type="text" placeholder="İkon" value="${l.icon||'🔗'}" style="width:45px;" onchange="currentLinks[${i}].icon=this.value">
+                    <input type="text" placeholder="İkon" value="${l.icon||'🔗'}" style="width:45px;" onchange="currentLinks[${i}].icon=this.value;currentLinks[${i}].brand=null;">
                     <input type="text" placeholder="Başlık" value="${l.title||''}" onchange="currentLinks[${i}].title=this.value">
                     <input type="text" placeholder="URL" value="${l.url||''}" onchange="currentLinks[${i}].url=this.value">
                     <button class="danger" onclick="deleteLink(${i})">✕</button>
@@ -435,6 +511,11 @@
                 emojiLeft: document.getElementById('emojiLeft').value,
                 emojiRight: document.getElementById('emojiRight').value,
                 emoji3d: document.getElementById('emoji3d').checked,
+                bioColor: document.getElementById('bioColor').value,
+                bioGlowColor: document.getElementById('bioGlowColor').value,
+                bioGlowIntensity: parseInt(document.getElementById('bioGlowIntensity').value),
+                nameBadge: document.getElementById('nameBadge').checked,
+                nameBadgePosition: document.getElementById('nameBadgePosition').value,
                 nameEffect: selectedEffect,
                 nameGradient: ef.gradient,
                 nameGlow: ef.glow,
@@ -444,12 +525,18 @@
                 nameFont: ef.font || '',
                 statusIcon: document.getElementById('statusIcon').value || '📍',
                 statusText: document.getElementById('statusText').value,
+                statusColor: document.getElementById('statusColor').value,
+                statusGlowColor: document.getElementById('statusGlowColor').value,
+                statusGlowIntensity: parseInt(document.getElementById('statusGlowIntensity').value),
                 showBadge: document.getElementById('showBadge').checked,
                 badgeStyle: selectedBadge,
                 badgeIcon: document.getElementById('badgeIcon').value || (badge ? badge.icon : '✓'),
                 badgeColor: document.getElementById('badgeColor').value || (badge ? badge.color : ''),
                 cardOpacity: parseInt(document.getElementById('cardOpacity').value) / 100,
-                cardBlur: parseInt(document.getElementById('cardBlur').value)
+                cardBlur: parseInt(document.getElementById('cardBlur').value),
+                viewColor: document.getElementById('viewColor').value,
+                viewGlowColor: document.getElementById('viewGlowColor').value,
+                viewGlowIntensity: parseInt(document.getElementById('viewGlowIntensity').value)
             };
             db.collection("bio").doc("profile").set(data, { merge: true })
                 .then(() => msg('Profil kaydedildi!', 'success')).catch(err => { console.error(err); msg('Hata: ' + err.message, 'error'); });
@@ -519,6 +606,12 @@
         document.getElementById('musicBlur').addEventListener('input', function() { document.getElementById('mbv')
                 .textContent = this.value + 'px'; });
         document.getElementById('btnGlowIntensity').addEventListener('input', function() { document.getElementById('giv')
+                .textContent = this.value + '%'; });
+        document.getElementById('bioGlowIntensity').addEventListener('input', function() { document.getElementById('bgiv')
+                .textContent = this.value + '%'; });
+        document.getElementById('statusGlowIntensity').addEventListener('input', function() { document.getElementById('sgiv')
+                .textContent = this.value + '%'; });
+        document.getElementById('viewGlowIntensity').addEventListener('input', function() { document.getElementById('vgiv')
                 .textContent = this.value + '%'; });
     </script>
 </body>
