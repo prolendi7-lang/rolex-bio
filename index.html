@@ -22,6 +22,12 @@
             display: flex; justify-content: center; align-items: center;
             padding: 20px; overflow-x: hidden;
             background: #0a0a0a;
+            position: relative;
+        }
+        .bg-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0); pointer-events: none; z-index: 0;
+            transition: background 0.5s;
         }
         .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
         .particle {
@@ -41,23 +47,68 @@
             border: 1px solid rgba(255,255,255,0.1);
             animation: fadeInUp 0.8s ease;
             background: rgba(20,20,20,0.85);
+            transition: background 0.3s, backdrop-filter 0.3s;
         }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .avatar-container { position: relative; display: inline-block; margin-bottom: 20px; }
+        .avatar-wrapper {
+            position: relative; display: inline-block; margin-bottom: 8px;
+        }
+        .avatar-ring {
+            position: absolute; top: -12px; left: -12px; right: -12px; bottom: -12px;
+            border-radius: 50%; pointer-events: none;
+            opacity: 0; transition: opacity 0.5s;
+        }
+        .avatar-ring.active { opacity: 1; }
+        .avatar-ring.fire {
+            border: 3px solid transparent;
+            animation: fireRing 1s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(255,69,0,0.6), inset 0 0 30px rgba(255,69,0,0.3);
+        }
+        @keyframes fireRing {
+            0%,100% { border-color: #ff4500; transform: scale(1); }
+            50% { border-color: #ff8c00; transform: scale(1.05); }
+        }
+        .avatar-ring.sparkle {
+            border: 2px dashed #fff;
+            animation: sparkleRing 2s linear infinite;
+            box-shadow: 0 0 40px rgba(255,255,255,0.3);
+        }
+        @keyframes sparkleRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .avatar-ring.neon {
+            border: 3px solid #00aaff;
+            animation: neonPulse 1.5s ease-in-out infinite;
+            box-shadow: 0 0 30px #00aaff, 0 0 60px #00aaff44;
+        }
+        @keyframes neonPulse {
+            0%,100% { box-shadow: 0 0 20px #00aaff, 0 0 40px #00aaff33; }
+            50% { box-shadow: 0 0 40px #00aaff, 0 0 80px #00aaff55; }
+        }
+        .avatar-ring.glow {
+            border: 2px solid rgba(255,255,255,0.3);
+            animation: glowPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(255,255,255,0.15);
+        }
+        @keyframes glowPulse {
+            0%,100% { box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+            50% { box-shadow: 0 0 50px rgba(255,255,255,0.3); }
+        }
         .avatar {
             width: 100px; height: 100px; border-radius: 50%;
             border: 3px solid rgba(255,255,255,0.3); object-fit: cover;
-            transition: all 0.3s;
+            transition: all 0.3s; position: relative; z-index: 1;
         }
         .avatar:hover { transform: scale(1.05); }
         .badge {
             position: absolute; bottom: 5px; right: 5px;
             color: white; width: 28px; height: 28px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 14px; border: 2px solid #0a0a0a;
+            font-size: 14px; border: 2px solid #0a0a0a; z-index: 2;
             animation: pulse 2s infinite;
         }
         .badge.hidden { display: none; }
@@ -65,7 +116,7 @@
             0%,100% { box-shadow: 0 0 15px rgba(0,150,255,0.5); }
             50% { box-shadow: 0 0 30px rgba(0,150,255,0.8); }
         }
-        .name-container { margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .name-container { margin-bottom: 2px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .name-emoji { font-size: 24px; display: inline-block; transition: transform 0.3s; }
         .name-emoji.d3 {
             text-shadow: 1px 1px 0 rgba(0,0,0,0.2), 2px 2px 0 rgba(0,0,0,0.25), 3px 3px 4px rgba(0,0,0,0.35);
@@ -93,6 +144,10 @@
             font-size: 13px; color: #bbb; opacity: 0.9; margin-bottom: 22px;
         }
         .status-line.hidden { display: none; }
+        .status-icon-svg {
+            width: 18px; height: 18px; display: inline-block;
+            filter: drop-shadow(0 0 4px rgba(255,255,255,0.3));
+        }
         .links { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 16px; }
         .link-btn {
             display: flex; align-items: center; justify-content: center;
@@ -122,37 +177,60 @@
             border: 1px solid rgba(255,255,255,0.1);
             animation: fadeInUp 1s ease;
             background: rgba(20,20,20,0.9);
+            flex-wrap: wrap;
         }
         .music-player.hidden { display: none; }
         .music-cover {
             width: 50px; height: 50px; border-radius: 50%; object-fit: cover;
             border: 2px solid rgba(255,255,255,0.2);
             animation: spin 4s linear infinite; animation-play-state: paused;
+            flex-shrink: 0;
         }
         .music-cover.playing { animation-play-state: running; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .music-info { flex: 1; text-align: left; }
+        .music-info { flex: 1; text-align: left; min-width: 100px; }
         .music-title { font-size: 13px; font-weight: 600; }
         .music-artist { font-size: 11px; color: #888; }
+        .music-controls {
+            display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+        }
+        .music-controls button {
+            background: rgba(255,255,255,0.1); border: none; border-radius: 50%;
+            width: 32px; height: 32px; color: white; font-size: 14px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .music-controls button:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+        .music-seek {
+            flex: 1; min-width: 80px; height: 4px; -webkit-appearance: none;
+            background: rgba(255,255,255,0.2); border-radius: 4px; outline: none;
+        }
+        .music-seek::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 12px; height: 12px;
+            border-radius: 50%; background: #ff4444; cursor: pointer;
+        }
         .view-count {
-            position: absolute; left: 16px; bottom: 14px;
             display: inline-flex; align-items: center; gap: 5px;
-            background: rgba(255,255,255,0.05); padding: 6px 14px;
+            background: transparent; padding: 6px 14px;
             border-radius: 20px; font-size: 12px; color: #999;
+            margin-top: 8px;
         }
         @media (max-width: 480px) {
             .profile-card { padding: 30px 20px 50px; }
             .name { font-size: 24px; }
             .avatar { width: 85px; height: 85px; }
             .music-player { padding: 12px 15px; }
+            .music-controls button { width: 28px; height: 28px; font-size: 12px; }
         }
     </style>
 </head>
 <body>
+    <div class="bg-overlay" id="bgOverlay"></div>
     <div class="particles" id="particles"></div>
     <div class="container">
         <div class="profile-card" id="profileCard">
-            <div class="avatar-container">
+            <div class="avatar-wrapper">
+                <div class="avatar-ring" id="avatarRing"></div>
                 <img class="avatar" id="avatar" src="https://i.imgur.com/default.png" alt="Avatar">
                 <div class="badge" id="badge">✓</div>
             </div>
@@ -163,16 +241,20 @@
             </div>
             <p class="bio-text" id="bioDisplay">Yükleniyor...</p>
             <div class="status-line hidden" id="statusLine">
-                <span id="statusIcon">📍</span><span id="statusText"></span>
+                <span id="statusIcon"></span><span id="statusText"></span>
             </div>
             <div class="links" id="linksContainer"></div>
-            <div class="view-count" id="viewCountWrap">👁 <span id="viewCount">0</span></div>
         </div>
+        <div class="view-count" id="viewCountWrap">👁 <span id="viewCount">0</span></div>
         <div class="music-player hidden" id="musicPlayer">
             <img class="music-cover" id="musicCover" src="https://i.imgur.com/default.png" alt="cover">
             <div class="music-info">
                 <div class="music-title" id="musicTitle">Müzik</div>
                 <div class="music-artist" id="musicArtist">Sanatçı</div>
+            </div>
+            <div class="music-controls">
+                <button id="musicPlayBtn" title="Çal/Durdur">⏸</button>
+                <input type="range" class="music-seek" id="musicSeek" min="0" max="100" value="0">
             </div>
         </div>
     </div>
@@ -197,17 +279,76 @@
             return `0 0 ${(gi * 14).toFixed(0)}px rgba(${c},${(gi * 0.85).toFixed(2)})`;
         }
 
+        // Müzik kontrolleri için değişkenler
+        let audio = document.getElementById('bgMusic');
+        let playBtn = document.getElementById('musicPlayBtn');
+        let seekBar = document.getElementById('musicSeek');
+        let isUserSeeking = false;
+
+        // Seek bar güncelleme
+        audio.addEventListener('timeupdate', () => {
+            if (!isUserSeeking && audio.duration) {
+                seekBar.value = (audio.currentTime / audio.duration) * 100;
+            }
+        });
+
+        seekBar.addEventListener('input', () => {
+            isUserSeeking = true;
+            if (audio.duration) {
+                audio.currentTime = (seekBar.value / 100) * audio.duration;
+            }
+        });
+        seekBar.addEventListener('change', () => {
+            isUserSeeking = false;
+        });
+
+        // Play/Pause
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play().catch(() => {});
+                playBtn.textContent = '⏸';
+            } else {
+                audio.pause();
+                playBtn.textContent = '▶';
+            }
+        });
+
+        audio.addEventListener('play', () => {
+            playBtn.textContent = '⏸';
+            document.getElementById('musicCover').classList.add('playing');
+        });
+        audio.addEventListener('pause', () => {
+            playBtn.textContent = '▶';
+            document.getElementById('musicCover').classList.remove('playing');
+        });
+        audio.addEventListener('ended', () => {
+            document.getElementById('musicCover').classList.remove('playing');
+            playBtn.textContent = '▶';
+        });
+
+        // Ana veri akışı
         db.collection("bio").doc("profile").onSnapshot((doc) => {
             if (!doc.exists) return;
             const d = doc.data();
 
             // İsim
             document.getElementById('nameDisplay').textContent = d.name || 'İsimsiz';
+            document.getElementById('nameDisplay').style.fontSize = (d.nameSize || 28) + 'px';
+
             const bioEl = document.getElementById('bioDisplay');
             bioEl.textContent = d.bio || '';
             bioEl.style.color = d.bioColor || '#aaaaaa';
             bioEl.style.textShadow = glowShadow(d.bioGlowColor, d.bioGlowIntensity);
+            bioEl.style.fontSize = (d.bioSize || 14) + 'px';
+
             document.getElementById('avatar').src = d.avatar || 'https://i.imgur.com/default.png';
+
+            // Avatar Efekti
+            const ring = document.getElementById('avatarRing');
+            ring.className = 'avatar-ring';
+            if (d.avatarEffect && d.avatarEffect !== 'none') {
+                ring.classList.add('active', d.avatarEffect);
+            }
 
             // Emojiler 3D / İsim yanı rozet
             const el = document.getElementById('nameEmojiLeft');
@@ -242,13 +383,26 @@
                 badge.textContent = d.badgeIcon || '✓';
                 badge.style.background = d.badgeColor || 'linear-gradient(135deg, #1da1f2, #0d8bd9)'; }
 
-            // Saydamlık (kart)
+            // Saydamlık (kart) - 0 olduğunda tamamen görünmez
             const cardOpacity = (d.cardOpacity !== undefined && d.cardOpacity !== null) ? d.cardOpacity : 0.85;
             const cardBlur = (d.cardBlur !== undefined && d.cardBlur !== null) ? d.cardBlur : 20;
             const card = document.getElementById('profileCard');
-            card.style.background = `rgba(20,20,20,${cardOpacity})`;
-            card.style.backdropFilter = `blur(${cardBlur}px)`;
-            card.style.webkitBackdropFilter = `blur(${cardBlur}px)`;
+            if (cardOpacity === 0) {
+                card.style.background = 'transparent';
+                card.style.backdropFilter = 'none';
+                card.style.webkitBackdropFilter = 'none';
+                card.style.border = 'none';
+            } else {
+                card.style.background = `rgba(20,20,20,${cardOpacity})`;
+                card.style.backdropFilter = `blur(${cardBlur}px)`;
+                card.style.webkitBackdropFilter = `blur(${cardBlur}px)`;
+                card.style.border = '1px solid rgba(255,255,255,0.1)';
+            }
+
+            // Gece Modu (Overlay)
+            const overlay = document.getElementById('bgOverlay');
+            const overlayVal = (d.bgOverlay !== undefined && d.bgOverlay !== null) ? d.bgOverlay : 0;
+            overlay.style.background = `rgba(0,0,0,${overlayVal / 100})`;
 
             // İsim efekti
             const nameEl = document.getElementById('nameDisplay');
@@ -260,11 +414,18 @@
             nameEl.style.filter = d.nameNeon ? `drop-shadow(0 0 ${d.neonSize || 10}px ${d.neonColor || '#fff'})` : 'none';
             nameEl.style.fontFamily = d.nameFont || "'Segoe UI', system-ui, -apple-system, sans-serif";
 
-            // Durum satırı (📍 Telegram gibi)
+            // Durum satırı (3D Konum İkonu)
             const statusLine = document.getElementById('statusLine');
             if (d.statusText) {
                 statusLine.classList.remove('hidden');
-                document.getElementById('statusIcon').textContent = d.statusIcon || '📍';
+                const iconSpan = document.getElementById('statusIcon');
+                // 3D SVG Konum İkonu
+                iconSpan.innerHTML = `
+                    <svg class="status-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" fill="currentColor" />
+                    </svg>
+                `;
                 document.getElementById('statusText').textContent = d.statusText;
                 statusLine.style.color = d.statusColor || '#bbbbbb';
                 statusLine.style.textShadow = glowShadow(d.statusGlowColor, d.statusGlowIntensity);
@@ -282,6 +443,10 @@
             document.documentElement.style.setProperty('--glow-color', `rgba(${gc},${(0.4 * gi).toFixed(2)})`);
             document.documentElement.style.setProperty('--glow-color-soft', `rgba(${gc},${(0.12 * gi).toFixed(2)})`);
             document.documentElement.style.setProperty('--glow-shimmer', `rgba(${gc},${(0.3 * gi).toFixed(2)})`);
+
+            // Telegram özel parlaklık
+            const tgColor = d.telegramGlowColor || '0,136,204';
+            const tgIntensity = (d.telegramGlowIntensity || 60) / 100;
 
             // Görüntülenme sayacı renk/parlama
             const viewCountWrap = document.getElementById('viewCountWrap');
@@ -322,18 +487,31 @@
                     if (btnShimmer) a.classList.add('glow-active');
                     if (d.btnBgColor) a.style.background = d.btnBgColor;
                     if (d.btnBorderColor) a.style.borderColor = d.btnBorderColor;
-                    // Şablona özel marka rengi (kendi parlama rengi)
+
+                    // Şablona özel marka rengi
                     if (link.color) {
-                        a.style.setProperty('--glow-color', `rgba(${link.color},0.5)`);
-                        a.style.setProperty('--glow-color-soft', `rgba(${link.color},0.15)`);
-                        a.style.setProperty('--glow-shimmer', `rgba(${link.color},0.45)`);
+                        // Telegram özel parlaklık
+                        if (link.brand === 'telegram') {
+                            a.style.setProperty('--glow-color', `rgba(${tgColor},${tgIntensity * 0.6})`);
+                            a.style.setProperty('--glow-color-soft', `rgba(${tgColor},${tgIntensity * 0.2})`);
+                            a.style.setProperty('--glow-shimmer', `rgba(${tgColor},${tgIntensity * 0.5})`);
+                        } else {
+                            a.style.setProperty('--glow-color', `rgba(${link.color},0.5)`);
+                            a.style.setProperty('--glow-color-soft', `rgba(${link.color},0.15)`);
+                            a.style.setProperty('--glow-shimmer', `rgba(${link.color},0.45)`);
+                        }
                         if (!d.btnBorderColor) a.style.borderColor = `rgba(${link.color},0.5)`;
                     }
+
                     if (d.btnHoverColor) {
-                        a.onmouseenter = () => { a.style.background = d.btnHoverColor;
-                            a.style.borderColor = d.btnHoverBorder || d.btnHoverColor; };
-                        a.onmouseleave = () => { a.style.background = d.btnBgColor || 'rgba(255,255,255,0.06)';
-                            a.style.borderColor = d.btnBorderColor || (link.color ? `rgba(${link.color},0.5)` : 'rgba(255,255,255,0.15)'); };
+                        a.onmouseenter = () => {
+                            a.style.background = d.btnHoverColor;
+                            a.style.borderColor = d.btnHoverBorder || d.btnHoverColor;
+                        };
+                        a.onmouseleave = () => {
+                            a.style.background = d.btnBgColor || 'rgba(255,255,255,0.06)';
+                            a.style.borderColor = d.btnBorderColor || (link.color ? `rgba(${link.color},0.5)` : 'rgba(255,255,255,0.15)');
+                        };
                     }
                     const iconHTML = link.brand
                         ? `<i class="bi bi-${link.brand}"></i>`
@@ -347,37 +525,46 @@
 
             // Müzik
             const mp = document.getElementById('musicPlayer');
-            const audio = document.getElementById('bgMusic');
-            const cover = document.getElementById('musicCover');
             if (d.musicUrl) {
                 mp.classList.remove('hidden');
                 const musicOpacity = (d.musicOpacity !== undefined && d.musicOpacity !== null) ? d.musicOpacity : 0.9;
                 const musicBlur = (d.musicBlur !== undefined && d.musicBlur !== null) ? d.musicBlur : 10;
-                mp.style.background = `rgba(20,20,20,${musicOpacity})`;
-                mp.style.backdropFilter = `blur(${musicBlur}px)`;
-                mp.style.webkitBackdropFilter = `blur(${musicBlur}px)`;
+                if (musicOpacity === 0) {
+                    mp.style.background = 'transparent';
+                    mp.style.backdropFilter = 'none';
+                    mp.style.webkitBackdropFilter = 'none';
+                    mp.style.border = 'none';
+                } else {
+                    mp.style.background = `rgba(20,20,20,${musicOpacity})`;
+                    mp.style.backdropFilter = `blur(${musicBlur}px)`;
+                    mp.style.webkitBackdropFilter = `blur(${musicBlur}px)`;
+                    mp.style.border = '1px solid rgba(255,255,255,0.1)';
+                }
                 document.getElementById('musicTitle').textContent = d.musicTitle || 'Müzik';
                 document.getElementById('musicArtist').textContent = d.musicArtist || '';
-                cover.src = d.musicCover || 'https://i.imgur.com/default.png';
-                if (audio.src !== d.musicUrl) audio.src = d.musicUrl;
-                audio.volume = 0.5;
-                if (d.musicAutoplay !== false) {
-                    audio.play().catch(() => {});
-                } else {
-                    audio.pause();
+                document.getElementById('musicCover').src = d.musicCover || 'https://i.imgur.com/default.png';
+
+                // Müzik değiştiyse yeniden yükle
+                if (audio.src !== d.musicUrl) {
+                    audio.src = d.musicUrl;
+                    audio.load();
+                    // Otomatik çal
+                    if (d.musicAutoplay !== false) {
+                        audio.play().catch(() => {
+                            // Tarayıcı otomatik çalmayı engellerse butona basmasını bekle
+                            playBtn.textContent = '▶';
+                        });
+                    } else {
+                        audio.pause();
+                        playBtn.textContent = '▶';
+                    }
                 }
             } else {
                 mp.classList.add('hidden');
                 audio.pause();
+                audio.src = '';
             }
         });
-
-        // Kapak fotoğrafı sadece müzik gerçekten çalarken dönsün (buton olmadığı için otomatik takip)
-        const bgAudio = document.getElementById('bgMusic');
-        const musicCoverEl = document.getElementById('musicCover');
-        bgAudio.addEventListener('play', () => musicCoverEl.classList.add('playing'));
-        bgAudio.addEventListener('pause', () => musicCoverEl.classList.remove('playing'));
-        bgAudio.addEventListener('ended', () => musicCoverEl.classList.remove('playing'));
 
         // Sayaç
         const viewRef = db.collection("bio").doc("views");
